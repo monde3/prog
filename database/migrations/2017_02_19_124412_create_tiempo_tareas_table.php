@@ -14,18 +14,19 @@ class CreateTiempoTareasTable extends Migration
     public function up()
     {
         Schema::create('tiempo_tareas', function (Blueprint $table) {
+            
             $table->increments('id');
-            $table->integer('alumno_id')->unsigned()->index()->default(1);
-            $table->string('cod_tarea');
-            $table->integer('curso_academico');
+            $table->integer('alumno_tarea_id')->unsigned()->index()->default(1);
             $table->dateTime('inicio');
-            $table->dateTime('fin');
+            $table->dateTime('fin')->nullable();;
+            $table->timestamps();
 
             //Foreign keys
-            $table->foreign(['alumno_id', 'cod_tarea', 'curso_academico'])
-                  ->references(['alumno_id', 'cod_tarea', 'curso_academico'])->on('alumno_tareas')
+            $table->foreign('alumno_tarea_id')
+                  ->references('id')->on('alumno_tareas')
                   ->onDelete('cascade')
                   ->onUpdate('cascade');
+            
         });
     }
 

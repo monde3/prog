@@ -15,15 +15,16 @@ class CreateAlumnoTareasTable extends Migration
     {
         Schema::create('alumno_tareas', function (Blueprint $table) {
             
-            $table->integer('alumno_id')->unsigned()->index()->default(1);
+            $table->increments('id');
+            $table->integer('user_id')->unsigned()->index()->default(1);
             $table->string('cod_tarea', 10);
             $table->integer('curso_academico');
 
             //Primary key
-            $table->primary(['alumno_id', 'cod_tarea', 'curso_academico']);
+            $table->unique(['user_id', 'cod_tarea', 'curso_academico']);
 
             //Alumno
-            $table->foreign('alumno_id')
+            $table->foreign('user_id')
                   ->references('id')->on('users')
                   ->onDelete('cascade')
                   ->onUpdate('cascade');
