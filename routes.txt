@@ -1,0 +1,67 @@
++--------+-----------+-----------------------------------------+--------------------------+------------------------------------------------------------------------+--------------+
+| Domain | Method    | URI                                     | Name                     | Action                                                                 | Middleware   |
++--------+-----------+-----------------------------------------+--------------------------+------------------------------------------------------------------------+--------------+
+|        | GET|HEAD  | /                                       |                          | Closure                                                                | web          |
+|        | POST      | addAlumno                               |                          | App\Http\Controllers\ServiciosController@addAlumno                     | web          |
+|        | GET|HEAD  | admin                                   |                          | App\Http\Controllers\HomeController@index                              | web,auth     |
+|        | GET|HEAD  | api/user                                |                          | Closure                                                                | api,auth:api |
+|        | GET|HEAD  | calendario                              |                          | Closure                                                                | web          |
+|        | POST      | crearTarea                              |                          | App\Http\Controllers\ServiciosController@crearTarea                    | web          |
+|        | GET|HEAD  | crearTiempo/{id}                        | crearTiempo              | App\Http\Controllers\TiempoTareaController@create                      | web          |
+|        | GET|HEAD  | cronometrotarea/{alumno_tarea_id}       |                          | App\Http\Controllers\MisTareasActivasController@tiempo                 | web          |
+|        | GET|HEAD  | cronometrotiempo/{tiempo_tarea_id}      |                          | App\Http\Controllers\TiempoTareaController@tiempo                      | web          |
+|        | GET|HEAD  | graficaalumno/{alumno_tarea_id}         | graficaalumno            | App\Http\Controllers\GraficaAlumnoController@index                     | web          |
+|        | GET|HEAD  | graficaprofesor/{cod_tarea}             | graficaprofesor          | App\Http\Controllers\GraficaProfesorController@index                   | web          |
+|        | GET|HEAD  | home                                    |                          | App\Http\Controllers\HomeController@index                              | web,auth     |
+|        | GET|HEAD  | login                                   | login                    | App\Http\Controllers\Auth\LoginController@showLoginForm                | web,guest    |
+|        | POST      | login                                   |                          | App\Http\Controllers\Auth\LoginController@login                        | web,guest    |
+|        | GET|HEAD  | logout                                  |                          | Closure                                                                | web          |
+|        | POST      | logout                                  | logout                   | App\Http\Controllers\Auth\LoginController@logout                       | web          |
+|        | GET|HEAD  | micalendario                            | micalendario.index       | App\Http\Controllers\CalendarioController@index                        | web          |
+|        | POST      | micalendario                            | micalendario.store       | App\Http\Controllers\CalendarioController@store                        | web          |
+|        | GET|HEAD  | micalendario/create                     | micalendario.create      | App\Http\Controllers\CalendarioController@create                       | web          |
+|        | DELETE    | micalendario/{micalendario}             | micalendario.destroy     | App\Http\Controllers\CalendarioController@destroy                      | web          |
+|        | PUT|PATCH | micalendario/{micalendario}             | micalendario.update      | App\Http\Controllers\CalendarioController@update                       | web          |
+|        | GET|HEAD  | micalendario/{micalendario}             | micalendario.show        | App\Http\Controllers\CalendarioController@show                         | web          |
+|        | GET|HEAD  | micalendario/{micalendario}/edit        | micalendario.edit        | App\Http\Controllers\CalendarioController@edit                         | web          |
+|        | GET|HEAD  | mistareas                               |                          | App\Http\Controllers\MisTareasActivasController@index                  | web          |
+|        | POST      | mistareasactivas                        | mistareasactivas.store   | App\Http\Controllers\MisTareasActivasController@store                  | web          |
+|        | GET|HEAD  | mistareasactivas                        | mistareasactivas.index   | App\Http\Controllers\MisTareasActivasController@index                  | web          |
+|        | GET|HEAD  | mistareasactivas/create                 | mistareasactivas.create  | App\Http\Controllers\MisTareasActivasController@create                 | web          |
+|        | DELETE    | mistareasactivas/{mistareasactiva}      | mistareasactivas.destroy | App\Http\Controllers\MisTareasActivasController@destroy                | web          |
+|        | GET|HEAD  | mistareasactivas/{mistareasactiva}      | mistareasactivas.show    | App\Http\Controllers\MisTareasActivasController@show                   | web          |
+|        | PUT|PATCH | mistareasactivas/{mistareasactiva}      | mistareasactivas.update  | App\Http\Controllers\MisTareasActivasController@update                 | web          |
+|        | GET|HEAD  | mistareasactivas/{mistareasactiva}/edit | mistareasactivas.edit    | App\Http\Controllers\MisTareasActivasController@edit                   | web          |
+|        | GET|HEAD  | mistareasfinalizadas                    |                          | App\Http\Controllers\MisTareasFinalizadasController@index              | web          |
+|        | POST      | misusuarios                             | misusuarios.store        | App\Http\Controllers\UserController@store                              | web          |
+|        | GET|HEAD  | misusuarios                             | misusuarios.index        | App\Http\Controllers\UserController@index                              | web          |
+|        | GET|HEAD  | misusuarios/create                      | misusuarios.create       | App\Http\Controllers\UserController@create                             | web          |
+|        | GET|HEAD  | misusuarios/{misusuario}                | misusuarios.show         | App\Http\Controllers\UserController@show                               | web          |
+|        | PUT|PATCH | misusuarios/{misusuario}                | misusuarios.update       | App\Http\Controllers\UserController@update                             | web          |
+|        | DELETE    | misusuarios/{misusuario}                | misusuarios.destroy      | App\Http\Controllers\UserController@destroy                            | web          |
+|        | GET|HEAD  | misusuarios/{misusuario}/edit           | misusuarios.edit         | App\Http\Controllers\UserController@edit                               | web          |
+|        | POST      | password/email                          |                          | App\Http\Controllers\Auth\ForgotPasswordController@sendResetLinkEmail  | web,guest    |
+|        | POST      | password/reset                          |                          | App\Http\Controllers\Auth\ResetPasswordController@reset                | web,guest    |
+|        | GET|HEAD  | password/reset                          |                          | App\Http\Controllers\Auth\ForgotPasswordController@showLinkRequestForm | web,guest    |
+|        | GET|HEAD  | password/reset/{token}                  |                          | App\Http\Controllers\Auth\ResetPasswordController@showResetForm        | web,guest    |
+|        | POST      | register                                |                          | App\Http\Controllers\Auth\RegisterController@register                  | web,guest    |
+|        | GET|HEAD  | register                                | register                 | App\Http\Controllers\Auth\RegisterController@showRegistrationForm      | web,guest    |
+|        | GET|HEAD  | tareaalumno/{alumno_tarea_id}           | tareaalumno              | App\Http\Controllers\TareaAlumnoController@index                       | web          |
+|        | GET|HEAD  | tareaprofesor/{cod_tarea}               | tareaprofesor            | App\Http\Controllers\TareaProfesorController@index                     | web          |
+|        | POST      | tareasalumno                            | tareasalumno.store       | App\Http\Controllers\TareaAlumnoController@store                       | web          |
+|        | GET|HEAD  | tareasalumno                            | tareasalumno.index       | App\Http\Controllers\TareaAlumnoController@index                       | web          |
+|        | GET|HEAD  | tareasalumno/create                     | tareasalumno.create      | App\Http\Controllers\TareaAlumnoController@create                      | web          |
+|        | GET|HEAD  | tareasalumno/{tareasalumno}             | tareasalumno.show        | App\Http\Controllers\TareaAlumnoController@show                        | web          |
+|        | DELETE    | tareasalumno/{tareasalumno}             | tareasalumno.destroy     | App\Http\Controllers\TareaAlumnoController@destroy                     | web          |
+|        | PUT|PATCH | tareasalumno/{tareasalumno}             | tareasalumno.update      | App\Http\Controllers\TareaAlumnoController@update                      | web          |
+|        | GET|HEAD  | tareasalumno/{tareasalumno}/edit        | tareasalumno.edit        | App\Http\Controllers\TareaAlumnoController@edit                        | web          |
+|        | GET|HEAD  | tiempoAlumnoTarea/{dni}/{cod_tarea}     | tiempoAlumnoTarea        | App\Http\Controllers\ServiciosController@tiempoAlumnoTarea             | web          |
+|        | POST      | tiempotarea                             | tiempotarea.store        | App\Http\Controllers\TiempoTareaController@store                       | web          |
+|        | GET|HEAD  | tiempotarea                             | tiempotarea.index        | App\Http\Controllers\TiempoTareaController@index                       | web          |
+|        | GET|HEAD  | tiempotarea/create                      | tiempotarea.create       | App\Http\Controllers\TiempoTareaController@create                      | web          |
+|        | DELETE    | tiempotarea/{tiempotarea}               | tiempotarea.destroy      | App\Http\Controllers\TiempoTareaController@destroy                     | web          |
+|        | PUT|PATCH | tiempotarea/{tiempotarea}               | tiempotarea.update       | App\Http\Controllers\TiempoTareaController@update                      | web          |
+|        | GET|HEAD  | tiempotarea/{tiempotarea}               | tiempotarea.show         | App\Http\Controllers\TiempoTareaController@show                        | web          |
+|        | GET|HEAD  | tiempotarea/{tiempotarea}/edit          | tiempotarea.edit         | App\Http\Controllers\TiempoTareaController@edit                        | web          |
+|        | GET|HEAD  | usuarios                                |                          | App\Http\Controllers\UserController@index                              | web          |
++--------+-----------+-----------------------------------------+--------------------------+------------------------------------------------------------------------+--------------+

@@ -11,14 +11,20 @@ use App\TiempoTarea;
 class AlumnoTarea extends Model
 {
     /**
-     * The attributes that are mass assignable.
+     * Atributos que son masivamente asignables
      *
      * @var array
      */
-    protected $fillable = ['user_id', 'cod_tarea', 'curso_academico'];
+    protected $fillable = ['user_id', 'cod_tarea'];
 
+    /*
+     * No guardamos cuando ha sido creado y/o actualizado un registro
+     */
     public $timestamps = false;
 
+    /*
+     * Estados de las tareas de un alumno
+     */
     const ACTIVA = "Activa";
     const EN_PROGRESO = "En progreso";
     const FINALIZADA = "Finalizada";
@@ -29,7 +35,7 @@ class AlumnoTarea extends Model
      */
     public function alumno()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User', 'user_id');
     }
 
     /**
@@ -51,8 +57,7 @@ class AlumnoTarea extends Model
     /**
      * Devuelve el tiempo que se ha trabajado en la tarea en minutos
      */
-
-    public function tiempoTotal(){
+    public function tiempoTotalSegundos(){
         
         $tiempoTotal = 0;
         $tiemposTarea = TiempoTarea::where('alumno_tarea_id', $this->id)->get();
@@ -61,11 +66,24 @@ class AlumnoTarea extends Model
             $tiempoTotal = $tiempoTotal + $tiempo->tiempoParcial();
         }
 
+        Return $tiempoTotal;
+    }
+
+    /**
+     * Devuelve el tiempo que se ha trabajado en la tarea en minutos
+     */
+    public function tiempoTotal(){
+        
+        $tiempoTotal = $this->tiempoTotalSegundos();
+        
         $tiempoTotal = floor($tiempoTotal/Carbon::SECONDS_PER_MINUTE);
 
         Return $tiempoTotal;
     }
 
+    /**
+     * Devuelve el porcentaje del tiempo realizado según la estimación del profesor
+     */
     public function porcentaje(){
         
         $tiempoTotal = $this->tiempoTotal();
@@ -75,6 +93,9 @@ class AlumnoTarea extends Model
         return $portentaje;
     }
 
+    /**
+     * Devuelve el estado de la tarea de un alumno
+     */
     public function estado(){
         $fechaFinTarea = Carbon::parse($this->tarea->fecha_fin, 'Europe/Madrid');        
         $ahora =  Carbon::parse('now', 'Europe/Madrid');
@@ -94,51 +115,58 @@ class AlumnoTarea extends Model
         
     }
 
-    public function accion(){
-
-        $numTareasActivas = TiempoTarea::where('alumno_tarea_id', $this->id)->whereNull('fin')->count();
-
-        if ($numTareasActivas===0){
-            return "Iniciar";
-        }elseif ($numTareasActivas===1){
-            return "Parar";
-        }
-
-        return "Error";
-    }
-
+    /**
+     * Devuelve el tiempo total de una tarea de un alumno formateado
+     */
     public function tiempoTotalFormateado(){
 
-        $minutos = $this->tiempoTotal();;
+        $segundos = $this->tiempoTotalSegundos();;
+
+        if ($segundos == 0){
+            return '0m';
+        }
+
+        $minutos = 0;
         $horas = 0;
         $dias = 0;
         $semanas = 0;
 
         $salida = '';
 
-        $horas = floor($minutos/Carbon::MINUTES_PER_HOUR);
 
-        if ($horas > 0){
-
-            $minutos = $minutos - ($horas * Carbon::MINUTES_PER_HOUR);
-
-            $dias = floor($horas/Carbon::HOURS_PER_DAY);
-
-            if ($dias > 0){
-                $horas = $horas - ($dias * Carbon::HOURS_PER_DAY);
-
-                $semanas = floor($dias/Carbon::DAYS_PER_WEEK);
-
-                if ($semanas > 0){
-                    $dias = $dias - ($semanas * Carbon::DAYS_PER_WEEK);                    
-                }
-            }
-
-        }
-
+        $minutos = floor($segundos/Carbon::SECONDS_PER_MINUTE);
 
         if ($minutos > 0){
-           $salida = $minutos . 'm';
+
+            $segundos = $segundos - ($minutos * Carbon::SECONDS_PER_MINUTE);
+            
+            $horas = floor($minutos/Carbon::MINUTES_PER_HOUR);
+
+            if ($horas > 0){
+
+                $minutos = $minutos - ($horas * Carbon::MINUTES_PER_HOUR);
+
+                $dias = floor($horas/Carbon::HOURS_PER_DAY);
+
+                if ($dias > 0){
+                    $horas = $horas - ($dias * Carbon::HOURS_PER_DAY);
+
+                    $semanas = floor($dias/Carbon::DAYS_PER_WEEK);
+
+                    if ($semanas > 0){
+                        $dias = $dias - ($semanas * Carbon::DAYS_PER_WEEK);                    
+                    }
+                }
+
+            }
+        }
+
+        if ($segundos > 0){
+           $salida = $segundos . 's';
+        }
+
+        if ($minutos > 0){
+           $salida = $minutos . 'm ' . $salida;
         }
 
         if ($horas > 0){
@@ -156,17 +184,18 @@ class AlumnoTarea extends Model
         return $salida;
     }
 
-
+    /**
+     * Devuelve el ranking del alumno en la tarea
+     */
     public function miRanking(){
         $listaAlumnos = $this->tarea->alumnos;
         $tiempo = $this->tiempoTotal();
-        
 
-        $alumnosMejores = $listaAlumnos->reject(function ($alumno, $tiempo) {
-            return $alumno->tiempoTotal()>=$tiempo;
+        $alumnosMejores = $listaAlumnos->reject(function ($alumno) use ($tiempo) {
+            return $alumno->tiempoTotal()<=$tiempo;
         });
 
-        return ($alumnosMejores->count() + 1);
+        return ($alumnosMejores->count()+1);
     }
 
 

@@ -1,0 +1,15 @@
+
+
+/* (amondejar) */
+/* Barras de progreso */
+
+#progress_back {
+    border-radius: 25px;
+    margin-bottom: auto;
+}
+
+.progress-li{
+    border-radius: 25px;
+	min-width: 200px;
+	padding-top: 15px;"
+}

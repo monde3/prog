@@ -10,6 +10,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\AlumnoTarea;
+use App\Tarea;
+use App\User;
 use Carbon\Carbon;
 
 /**
@@ -29,23 +31,43 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Pantalla de inicio
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return Response
      */
     public function index(Request $request)
     {
-        if  ($request->user()->rol == 'alumno'){
-            //Obtenemos las próximas cinco tareas ordenadas por el tiempo que f
-            $misProximasTareas = AlumnoTarea::where('user_id', $request->user()->id)->get();
+        $usuario = $request->user();
+
+        if (!$usuario->activo){
+            abort(403);
+        } elseif ($usuario->rol == 'alumno'){
+            //Obtenemos las próximas cinco tareas ordenadas por el tiempo que finalizan
+            $misProximasTareas = AlumnoTarea::where('user_id', $usuario->id)->get();
 
             $misProximasTareas = $misProximasTareas->reject(function ($tareaAlumno) {
                 return Carbon::parse($tareaAlumno->tarea->fecha_fin) < Carbon::now('Europe/Madrid');
             })->sortBy( function ( $tareaAlumno ){
                 return $tareaAlumno->tarea->tiempoRestante();
+            })->map(function ($tareaAlumno){
+                return $tareaAlumno->tarea;
+            })->take(5);
+
+            //Calculamos el nivel en el que nos encontramos (amondejar)
+            $nivelAvatar = floor($usuario->exp / User::PUNTOS_POR_NIVEL);
+
+        } elseif  ($usuario->rol == 'profesor'){
+            //Obtenemos las próximas cinco tareas ordenadas por el tiempo que finalizan
+            $misProximasTareas = Tarea::where('propietario_id', $usuario->id)->get();
+            
+            $misProximasTareas = $misProximasTareas->reject(function ($tarea) {
+                return Carbon::parse($tarea->fecha_fin) < Carbon::now('Europe/Madrid');
+            })->sortBy( function ( $tarea ){
+                return $tarea->tiempoRestante();
             })->take(5);
         }
 
-        return view('home', compact('misProximasTareas'));
+        return view('home', compact('misProximasTareas', 'nivelAvatar'));
     }
 }

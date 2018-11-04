@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Asignatura extends Model
 {
     /**
-     * The attributes that are mass assignable.
+     * Atributos que son masivamente asignables
      *
      * @var array
      */

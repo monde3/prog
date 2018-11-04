@@ -2,6 +2,9 @@
     <meta charset="UTF-8">
     <title> Progresa - @yield('htmlheader_title', 'Your title here') </title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+
+    <link href="{{ asset('/css/myStyle.css') }}" rel="stylesheet" type="text/css" />
+
     <!-- Bootstrap 3.3.4 -->
     <link href="{{ asset('/css/bootstrap.css') }}" rel="stylesheet" type="text/css" />
     <!-- Font Awesome Icons -->
@@ -16,7 +19,19 @@
     -->
     <link href="{{ asset('/css/skins/skin-blue.css') }}" rel="stylesheet" type="text/css" />
     <!-- iCheck -->
-    <link href="{{ asset('/plugins/iCheck/square/blue.css') }}" rel="stylesheet" type="text/css" />
+    
+    <!--datepiker-->
+    <link href="{{ asset('/plugins/datepicker/datepicker3.css') }}" rel="stylesheet" type="text/css" />
+
+    <!--timepiker-->
+    <link href="{{ asset('/plugins/timepicker/bootstrap-timepicker.min.css') }}" rel="stylesheet" type="text/css" />
+
+    <!--FullCalendar-->
+    <link href="{{ asset('/plugins/fullcalendar/fullcalendar.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('/plugins/fullcalendar/fullcalendar.print.css') }}"" rel="stylesheet" media='print' />
+    
+    <!--Cronómetro-->
+    <link href="{{ asset('/plugins/cronometro/style.css') }}" rel="stylesheet" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

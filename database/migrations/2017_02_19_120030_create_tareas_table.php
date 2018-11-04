@@ -18,12 +18,13 @@ class CreateTareasTable extends Migration
             $table->string('cod_tarea', 10)->primary();
             $table->string('titulo', 100);
             $table->string('des_tarea', 255);
-            $table->float('tiempo_estimado', 4, 2);
+            $table->integer('curso_academico');
+            $table->float('tiempo_estimado', 6, 2);
             $table->dateTime('fecha_fin');
             
             //Propietario de la tarea
-            $table->integer('propierio_id')->unsigned()->index()->default(1);
-            $table->foreign('propierio_id')
+            $table->integer('propietario_id')->unsigned()->index()->default(1);
+            $table->foreign('propietario_id')
                   ->references('id')->on('users')
                   ->onDelete('cascade')
                   ->onUpdate('cascade');;

@@ -5,10 +5,10 @@
 @endsection
 
 @section('content')
-<body class="hold-transition login-page">
+<body class="hold-transition login-page" style="background-color: #34495e">
     <div class="login-box">
         <div class="login-logo">
-            <a href="{{ url('/home') }}"><b>Progresa</b></a>
+            <a href="{{ url('/home') }}"><b style="color: white">Progresa</b></a>
         </div><!-- /.login-logo -->
 
     @if (count($errors) > 0)
@@ -36,11 +36,7 @@
         </div>
         <div class="row">
             <div class="col-xs-8">
-                <div class="checkbox icheck">
-                    <label>
-                        <input type="checkbox" name="remember"> {{ trans('adminlte_lang::message.remember') }}
-                    </label>
-                </div>
+                <a href="{{ url('/register') }}" class="text-center">{{ trans('adminlte_lang::message.join') }}</a>
             </div><!-- /.col -->
             <div class="col-xs-4">
                 <button type="submit" class="btn btn-primary btn-block btn-flat">{{ trans('adminlte_lang::message.buttonsign') }}</button>

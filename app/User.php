@@ -20,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'dni', 'nombre', 'apellidos', 'email', 'password', 'rol',
+        'dni', 'nombre', 'apellidos', 'email', 'password', 'rol', 'activo', 'oro', 'exp', 'vida', 'last_login'
     ];
 
     /**
@@ -31,6 +31,11 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /*
+     Intervalo con el que se sube de nivel (amondejar)
+     */
+    const PUNTOS_POR_NIVEL = 50; //Cada 50 puntos subiremos de nivel
 
 
     /**
@@ -51,89 +56,142 @@ class User extends Authenticatable
 
 
     public function numNotificaciones(){
-        $tareasAlumno = AlumnoTarea::where('user_id', $this->id)->get();
 
-        $tareasAlumno = $tareasAlumno->reject(function ($tareaAlumno) {
-            return  (
-                    Carbon::parse($tareaAlumno->tarea->fecha_fin) < Carbon::now('Europe/Madrid') or
-                    $tareaAlumno->tarea->tiempoRestante() > Tarea::ALERTA_AMARILLA
-                    );
-        });
+        $numNotificaciones = 0;
+
+        if ($this->rol == 'alumno') {        
+            $tareasAlumno = AlumnoTarea::where('user_id', $this->id)->get();
+
+            $tareasAlumno = $tareasAlumno->reject(function ($tareaAlumno) {
+                return  (
+                        Carbon::parse($tareaAlumno->tarea->fecha_fin) < Carbon::now('Europe/Madrid') or
+                        $tareaAlumno->tarea->tiempoRestante() > Tarea::ALERTA_AMARILLA
+                        );
+            });
+
+            $numNotificaciones = $tareasAlumno->count();
+        } elseif ($this->rol == 'profesor'){
+            $tareasProfesor = Tarea::where('propietario_id', $this->id)->get();
+
+            $tareasProfesor = $tareasProfesor->reject(function ($tareaProfesor) {
+                return  (
+                        Carbon::parse($tareaProfesor->fecha_fin) < Carbon::now('Europe/Madrid') or
+                        $tareaProfesor->tiempoRestante() > Tarea::ALERTA_AMARILLA
+                        );
+            });
+
+            $numNotificaciones = $tareasProfesor->count();
+        }
         
-        $numNotificaciones = $tareasAlumno->count();
+            
 
         return $numNotificaciones;
     }
 
     public function numNotificacionesAlertaRoja(){
-        $tareasAlumno = AlumnoTarea::where('user_id', $this->id)->get();
-
-        $tareasAlumno = $tareasAlumno->reject(function ($tareaAlumno) {
-            return  (
-                    Carbon::parse($tareaAlumno->tarea->fecha_fin) < Carbon::now('Europe/Madrid') or
-                    $tareaAlumno->tarea->tiempoRestante() > Tarea::ALERTA_ROJA
-                    );
-        });
+        $numNotificaciones = 0;
         
-        $numNotificaciones = $tareasAlumno->count();
+        if ($this->rol == 'alumno') {
+            $tareasAlumno = AlumnoTarea::where('user_id', $this->id)->get();
+
+            $tareasAlumno = $tareasAlumno->reject(function ($tareaAlumno) {
+                return  (
+                        Carbon::parse($tareaAlumno->tarea->fecha_fin) < Carbon::now('Europe/Madrid') or
+                        $tareaAlumno->tarea->tiempoRestante() > Tarea::ALERTA_ROJA
+                        );
+            });
+            
+            $numNotificaciones = $tareasAlumno->count();
+        } elseif ($this->rol == 'profesor'){
+            $tareasProfesor = Tarea::where('propietario_id', $this->id)->get();
+
+            $tareasProfesor = $tareasProfesor->reject(function ($tareaProfesor) {
+                return  (
+                        Carbon::parse($tareaProfesor->fecha_fin) < Carbon::now('Europe/Madrid') or
+                        $tareaProfesor->tiempoRestante() > Tarea::ALERTA_ROJA
+                        );
+            });
+
+            $numNotificaciones = $tareasProfesor->count();
+        }
 
         return $numNotificaciones;
     }
 
     public function numNotificacionesAlertaAmarilla(){
-        $tareasAlumno = AlumnoTarea::where('user_id', $this->id)->get();
-
-        $tareasAlumno = $tareasAlumno->reject(function ($tareaAlumno) {
-            return  (
-                    Carbon::parse($tareaAlumno->tarea->fecha_fin) < Carbon::now('Europe/Madrid') or
-                    $tareaAlumno->tarea->tiempoRestante() > Tarea::ALERTA_AMARILLA or
-                    $tareaAlumno->tarea->tiempoRestante() < Tarea::ALERTA_ROJA
-                    );
-        });
+        $numNotificaciones = 0;
         
-        $numNotificaciones = $tareasAlumno->count();
+        if ($this->rol == 'alumno') {
+            $tareasAlumno = AlumnoTarea::where('user_id', $this->id)->get();
+
+            $tareasAlumno = $tareasAlumno->reject(function ($tareaAlumno) {
+                return  (
+                        Carbon::parse($tareaAlumno->tarea->fecha_fin) < Carbon::now('Europe/Madrid') or
+                        $tareaAlumno->tarea->tiempoRestante() > Tarea::ALERTA_AMARILLA or
+                        $tareaAlumno->tarea->tiempoRestante() < Tarea::ALERTA_ROJA
+                        );
+            });
+            
+            $numNotificaciones = $tareasAlumno->count();
+        } elseif ($this->rol == 'profesor'){
+            $tareasProfesor = Tarea::where('propietario_id', $this->id)->get();
+
+            $tareasProfesor = $tareasProfesor->reject(function ($tareaProfesor) {
+                return  (
+                        Carbon::parse($tareaProfesor->fecha_fin) < Carbon::now('Europe/Madrid') or
+                        $tareaProfesor->tiempoRestante() > Tarea::ALERTA_AMARILLA or
+                        $tareaProfesor->tiempoRestante() < Tarea::ALERTA_ROJA
+                        );
+            });
+            
+            $numNotificaciones = $tareasProfesor->count();
+        }
 
         return $numNotificaciones;
     }
 
-    public function misTareasActivas()
-    {
-        $ahora = Carbon::now();
-        $alumnoId = $this->id;
+    // (amondejar) Nos indica si debemos mostrar el modal de primer login
+    public function mostrarModalFirstLogin(){
+        if ($this->rol != 'alumno'){
+            return 0;
+        }
 
-        $tareas = DB::select(DB::raw( 
-                "select at.id as alumno_tarea_id,
-                        at.alumno_id,
-                        at.cod_tarea,
-                        at.curso_academico,
-                        mt.tiempo,
-                        t.titulo,
-                        t.des_tarea,
-                        t.tiempo_estimado,
-                        t.fecha_fin,
-                        asi.cod_asi,
-                        asi.des_asi,
-                        ROUND(tiempo*100/t.tiempo_estimado,2) porcentaje
-                   from (select ata.id,
-                                SUM(IFNULL(tt.inicio, '$ahora') - 
-                                    IFNULL(tt.fin, IF(ISNULL(tt.inicio), '$ahora', 
-                                                                         IF('$ahora'>t.fecha_fin, t.fecha_fin, 
-                                                                                                  '$ahora')))) tiempo
-                           from alumno_tareas ata left outer join tiempo_tareas tt
-                             on ata.id = tt.alumno_tarea_id,
-                                tareas t
-                          where ata.alumno_id = '$alumnoId'
-                            and ata.cod_tarea = t.cod_tarea
-                            and t.fecha_fin > '$ahora'
-                          group by ata.id) mt,
-                        alumno_tareas at,
-                        tareas t,
-                        asignaturas asi
-                  where at.id = mt.id
-                    and at.cod_tarea = t.cod_tarea
-                    and asi.cod_asi = t.cod_asi"));
-      
-        return $tareas;
+        // Si es el primer login del día guardamos la fecha y otorgamos 5 exp (amondejar)
+        $dateLastLogin = Carbon::parse(Carbon::parse($this->last_login)->toDateString());
+        $today = Carbon::today();
+        $mostrarModal = $dateLastLogin->diffInDays($today);
 
+        if ($mostrarModal > 0){
+            $this->last_login = $today;
+            $this->save();
+        }
+        return $mostrarModal;
+    }
+
+    public function porcentajeNivel(){
+        if ($this->rol != 'alumno'){
+            return 0;
+        }
+
+        //Puntos que hemos conseguido en el nivel actual (amondejar)
+        $puntosEnNivel = $this->exp % User::PUNTOS_POR_NIVEL;
+        $porcentaje = $puntosEnNivel * 100 / User::PUNTOS_POR_NIVEL;
+        
+        return $porcentaje;
+    }
+
+    public function sumarExperiencia($cantidad){
+            $this->exp += $cantidad;
+            $this->save();
+    }
+
+    public function sumarVida($cantidad){
+            $this->vida += $cantidad;
+            $this->save();
+    }
+
+    public function sumarOro($cantidad){
+            $this->oro += $cantidad;
+            $this->save();
     }
 }

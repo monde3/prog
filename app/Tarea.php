@@ -5,30 +5,42 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\User;
+use App\AlumnoTarea;
 
 class Tarea extends Model
 {
 
-    const ALERTA_ROJA = 10080; //Minutos que restantes de una tarea para que esté en alerta roja
-    const ALERTA_AMARILLA = 30240; //Minutos que restantes de una tarea para que esté en alerta amarilla
     /**
-     * The attributes that are mass assignable.
+     * Atributos que son masivamente asignables
      *
      * @var array
      */
     protected $fillable = [
-        'cod_tarea', 'titulo', 'des_tarea', 'tiempo_estimado', 'fecha_fin', 'propierio_id', 'cod_asi',
+        'cod_tarea', 'titulo', 'des_tarea', 'curso_academico', 'tiempo_estimado', 'fecha_fin', 'propietario_id', 'cod_asi',
     ];
 
+    /**
+     * Primary key
+     */
     protected $primaryKey = 'cod_tarea';
+
+    /*
+     * No guardamos cuando ha sido creado y/o actualizado un registro
+     */
     public $timestamps = false;
+
+    /*
+     Constantes para saber cuantos segundos deben de faltar para que una tarea entre en alerta
+     */
+    const ALERTA_ROJA = 10080; //Minutos que restantes de una tarea para que esté en alerta roja
+    const ALERTA_AMARILLA = 30240; //Minutos que restantes de una tarea para que esté en alerta amarilla
     
     /**
      * Obtiene el usuario propietario de la tarea
      */
     public function propietario()
     {
-        return $this->belongsTo('App\User', 'propierio_id');
+        return $this->belongsTo('App\User', 'propietario_id');
     }
 
     /**
@@ -49,7 +61,9 @@ class Tarea extends Model
     }
 
 
-
+    /**
+     * Obtiene la fecha final formateada d/m/Y H:i
+     */
     public function fechaFormateada(){
 
         $fechaFinTarea = Carbon::parse($this->fecha_fin, 'Europe/Madrid');
@@ -57,7 +71,9 @@ class Tarea extends Model
         
     }
 
-
+    /**
+     * Obtiene el tiempo estimado formateado
+     */
     public function tiempoTareaFormateado(){
 
         $minutos = $this->tiempo_estimado;
@@ -107,6 +123,9 @@ class Tarea extends Model
         return $salida;
     }
 
+    /**
+     * Obtiene el tiempo que le falta a la tarea por acabar
+     */
     public function tiempoRestante(){
 
         $fechaFinTarea = Carbon::parse($this->fecha_fin, 'Europe/Madrid');
@@ -121,6 +140,9 @@ class Tarea extends Model
         return $minutos;
     }
 
+    /**
+     * Obtiene el tiempo que le falta a la tarea por acabar formateado
+     */
     public function tiempoRestanteFormateado (){
         
         $minutos = $this->tiempoRestante();
@@ -207,6 +229,41 @@ class Tarea extends Model
 
         return $salida;
     }
+
+    /**
+     * Obtiene si la tarea ha acabado
+     */
+    function activa (){
+
+        return (Carbon::parse($this->fecha_fin, 'Europe/Madrid') > Carbon::parse('now', 'Europe/Madrid'));
+    }
+
+    /**
+     * Obtiene la lista de alumnos de una tarea
+     */
+    function ranking(){
+        $alumnos = AlumnoTarea::where('cod_tarea', str_pad($this->cod_tarea, 10, "0", STR_PAD_LEFT));
+
+        return $alumnos;
+    }
+
+    function mediaTiempoTrabajado (){
+        $alumnos = $this->alumnos;
+
+        $media = $alumnos->reject(function ($alumno) {
+            return $alumno->tiempoTotalSegundos()==0;
+        })->map(function ($alumno) {
+            return $alumno->tiempoTotalSegundos();
+        })->avg();
+
+        if (!isset($media)){
+            return 0;
+        }
+
+        return $media;
+    }
+
+
 
 
 }

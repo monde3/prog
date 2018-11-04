@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<title>Cronómetro</title>
+        <meta charset="utf-8" />
+        
+        <link href="style.css" rel="stylesheet" />
+        <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+	</head>
+    <body>
+        
+        <div id="timer">
+            <div class="container">
+                <div id="hour">00</div>
+                <div class="divider">:</div>
+                <div id="minute">00</div>
+                <div class="divider">:</div>
+                <div id="second">00</div>                
+            </div>
+            <button id="btn-comenzar">Comenzar</button>
+        </div>
+        
+        <script>
+$(document).ready(function(){
+
+    var tiempo = {
+        hora: 0,
+        minuto: 0,
+        segundo: 0
+    };
+
+    var tiempo_corriendo = null;
+
+    $("#btn-comenzar").click(function(){
+        if ( $(this).text() == 'Comenzar' )
+        {
+            $(this).text('Detener');                        
+            tiempo_corriendo = setInterval(function(){
+                // Segundos
+                tiempo.segundo++;
+                if(tiempo.segundo >= 60)
+                {
+                    tiempo.segundo = 0;
+                    tiempo.minuto++;
+                }      
+
+                // Minutos
+                if(tiempo.minuto >= 60)
+                {
+                    tiempo.minuto = 0;
+                    tiempo.hora++;
+                }
+
+                $("#hour").text(tiempo.hora < 10 ? '0' + tiempo.hora : tiempo.hora);
+                $("#minute").text(tiempo.minuto < 10 ? '0' + tiempo.minuto : tiempo.minuto);
+                $("#second").text(tiempo.segundo < 10 ? '0' + tiempo.segundo : tiempo.segundo);
+            }, 1000);
+        }
+        else 
+        {
+            $(this).text('Comenzar');
+            clearInterval(tiempo_corriendo);
+        }
+    })
+})
+        </script>
+  
+	</body>
+</html>
