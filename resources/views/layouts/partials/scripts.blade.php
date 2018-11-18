@@ -32,13 +32,29 @@
 
 <script>
     $(document).ready(function() {
+      // Activamos el item del menú izquierdo en función de la url en la que estemos
+      var url_actual = window.location.protocol + "//" + window.location.host + window.location.pathname;
+      var sideBarItem = $("#sidebar_item_home");
+      if (url_actual.search("mistareasfinalizadas") > 0){
+        sideBarItem = $("#sidebar_item_mistareasfinalizadas");
+      }
+      else if (url_actual.search("mistareas") > 0 || url_actual.search("tareaalumno") > 0){
+        sideBarItem = $("#sidebar_item_mistareas");
+      }
+      else if (url_actual.search("usuarios") > 0){
+        sideBarItem = $("#sidebar_item_usuarios");
+      }
+      sideBarItem.addClass('active');
+
       var mostrarModal = ({{ Auth::user()->mostrarModalFirstLogin() }});
       // Modal de primer login en plantilla app.blade.php
-      if ( mostrarModal > 0)
-          $("#first_login").modal();
+      if ( mostrarModal > 0){
+        $("#first_login").modal();
+        $("#header-exp").html(mostrarModal);
+      }
       
     	var porcentaje = ({{ Auth::user()->porcentajeNivel() }}) + '%';
     	// Establecemos el progreso en el nivel actual
-	    $("#level_bar").width(porcentaje);
+      $("#level_bar").width(porcentaje);
     });
 </script>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Avatar;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -101,7 +102,7 @@ class RegisterController extends Controller
 
         if(!isset($usuario)){
         // Si no hemos encontrado el usuario creamos uno nuevo
-            return User::create([
+            $user = User::create([
                 'dni' => $data['dni'],
                 'nombre' => $data['nombre'],
                 'apellidos' => $data['apellidos'],
@@ -114,6 +115,15 @@ class RegisterController extends Controller
                 'vida' => 0,
                 'last_login' => Carbon::now(),
             ]);
+            Avatar::create([
+                'user_id' => $user->id,
+                'head' => 0,
+                'body' => 0,
+                'hands' => 0,
+                'foot' => 0,
+                'weapon' => 0,
+            ]);
+            return $user;
         } else { 
         // Si el usuario ya existe, lo creamos desde cero si la contraseña es la misma
         // y le mantenemos los valores del avatar

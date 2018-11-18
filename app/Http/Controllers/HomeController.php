@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\AlumnoTarea;
 use App\Tarea;
 use App\User;
+use App\Avatar;
 use Carbon\Carbon;
 
 /**
@@ -57,6 +58,9 @@ class HomeController extends Controller
             //Calculamos el nivel en el que nos encontramos (amondejar)
             $nivelAvatar = floor($usuario->exp / User::PUNTOS_POR_NIVEL);
 
+            // (amondejar) Obtenemos información del avatar
+            $avatar = Avatar::where('user_id', $usuario->id)->get()->first();
+
         } elseif  ($usuario->rol == 'profesor'){
             //Obtenemos las próximas cinco tareas ordenadas por el tiempo que finalizan
             $misProximasTareas = Tarea::where('propietario_id', $usuario->id)->get();
@@ -68,6 +72,6 @@ class HomeController extends Controller
             })->take(5);
         }
 
-        return view('home', compact('misProximasTareas', 'nivelAvatar'));
+        return view('home', compact('misProximasTareas', 'nivelAvatar', 'avatar'));
     }
 }

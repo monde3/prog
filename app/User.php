@@ -33,9 +33,11 @@ class User extends Authenticatable
     ];
 
     /*
-     Intervalo con el que se sube de nivel (amondejar)
+     (amondejar)
      */
-    const PUNTOS_POR_NIVEL = 50; //Cada 50 puntos subiremos de nivel
+    const PUNTOS_POR_NIVEL = 100; //Intervalo con el que se sube de nivel
+    const VIDA_MAXIMA = 100; // Puntuación máxima de vida que se puede obtener
+    const EXP_ADICIONAL = 20; // Porcentaje de puntos de vida, adicionales al sumar experiencia
 
 
     /**
@@ -162,36 +164,49 @@ class User extends Authenticatable
         $mostrarModal = $dateLastLogin->diffInDays($today);
 
         if ($mostrarModal > 0){
+            $this->sumarExperiencia(5);
             $this->last_login = $today;
             $this->save();
+            $mostrarModal = $this->exp;
         }
         return $mostrarModal;
     }
 
+    // (amondejar) Puntos que hemos conseguido en el nivel actual
     public function porcentajeNivel(){
         if ($this->rol != 'alumno'){
             return 0;
         }
+        $puntosEnNivel = $this->exp % Self::PUNTOS_POR_NIVEL;
+        $porcentaje = $puntosEnNivel * 100 / Self::PUNTOS_POR_NIVEL;
 
-        //Puntos que hemos conseguido en el nivel actual (amondejar)
-        $puntosEnNivel = $this->exp % User::PUNTOS_POR_NIVEL;
-        $porcentaje = $puntosEnNivel * 100 / User::PUNTOS_POR_NIVEL;
-        
         return $porcentaje;
     }
 
     public function sumarExperiencia($cantidad){
-            $this->exp += $cantidad;
-            $this->save();
+        $puntos_adicionales = intdiv($this->vida, Self::EXP_ADICIONAL);
+
+        $this->exp += $cantidad;
+        $this->save();
     }
 
     public function sumarVida($cantidad){
+        if ($this->vida < Self::VIDA_MAXIMA) {
             $this->vida += $cantidad;
-            $this->save();
+        } else if (($this->vida + $cantidad) > Self::VIDA_MAXIMA) {
+            $this->vida = Self::VIDA_MAXIMA;
+        }
+        
+        $this->save();
     }
 
     public function sumarOro($cantidad){
             $this->oro += $cantidad;
+            $this->save();
+    }
+
+    public function restarOro($cantidad){
+            $this->oro -= $cantidad;
             $this->save();
     }
 }

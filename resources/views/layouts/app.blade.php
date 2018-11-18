@@ -52,8 +52,10 @@ desired effect
 
     @include('layouts.partials.footer')
     
+    <!-- MODALES -->
     @if (Auth::user()->activo and Auth::user()->rol=='alumno')
         @include('layouts.alumno.modal_first_login')
+        @include('layouts.partials.modal_mensaje')
     @endif
 
 </div><!-- ./wrapper -->

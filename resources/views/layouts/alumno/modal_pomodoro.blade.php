@@ -1,6 +1,6 @@
 <!--MODAL PARA MOSTRAR EL TRASCURSO DE LA TÉCNICA DEL POMODORO-->
 <!--Comentamos el fade para que vaya más rápido en la máquina virtual-->
-<!--<div class="modal fade" tabindex="-1" role="dialog" id="first_login">-->
+<!--<div class="modal fade" tabindex="-1" role="dialog" id="modal_pomodoro">-->
 <div class="modal" tabindex="-1" role="dialog" id="modal_pomodoro">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -20,7 +20,6 @@
                 <div id="second">00</div>                
             </div>
             <button id="btn-comenzar">Comenzar</button>
-            <button id="btn-comenzar-debug">Comenzar</button>
         </div>
 
       </div>
@@ -72,7 +71,7 @@
               //COMENZAR
               if( tiempo.fase == -1 )
               {
-                  comenzar_pomodoro();
+                  gestion_intervalo();
                   audio_alarm.pause();
                   audio_alarm.currentTime = 0;
                   $(this).text('Detener');                      
@@ -89,7 +88,7 @@
               //DESCANSAR
               else if((tiempo.fase % 4) == PRE_DESCANSO)
               {
-                  comenzar_pomodoro();
+                  gestion_intervalo();
                   reset_clock();
                   $(this).text('Detener');
                   titulo.text('DESCANSO ' + (Math.round(tiempo.fase/2) + 1));
@@ -100,7 +99,7 @@
               //POMODORO
               else if((tiempo.fase % 4) == PRE_POMODORO)
               {
-                  comenzar_pomodoro();
+                  gestion_intervalo();
                   reset_clock();
                   $(this).text('Detener'); 
                   titulo.text('POMODORO ' + (Math.round(tiempo.fase/2) + 1));   
@@ -116,9 +115,45 @@
           })
 
           $("#btn-cerrar").click(function(){
-              $("btn-comenzar").text('Comenzar');
-              reset_all();
+              //$("btn-comenzar").text('Comenzar');
+              //reset_all();
+              // Refrescamos la página para recargar los parámetros de la tarea (estado y nuevos tiempos)
+              location.reload();
           })
+
+          function gestion_intervalo(){
+              var alumno_tarea_id = $("#alumno_tarea_id").text().trim();
+              var url_tarea = "{{ url ('gestionPomodoro') }}"
+                                .concat("/").concat(alumno_tarea_id)
+                                .concat("/").concat(fase_actual);
+
+              $.ajax({
+                  type: "GET",
+                  url: url_tarea
+              }).done(function t(response) {
+                  alert('Client.response->'.concat(response));
+                  var resp = response.split("/");
+                  if(resp[0]=='OK'){
+                    if (fase_actual == 1){
+                      fase_actual = 0;
+                      $("#header-oro").text(resp[1]);
+                    }
+                    else{
+                      fase_actual = 1;
+                      $("#header-vida").text(resp[1]);
+                    }
+                  }
+                  else{
+                    reset_all();
+                    $("#modal_pomodoro").modal('toggle');
+                    $("#modal_mensaje_titulo").text("Aviso");
+                    $("#modal_mensaje_texto").text(resp[1]);
+                    $("#modal_mensaje").show();
+                  }
+
+                  
+              });
+          };
 
           function update_clock(){
               $("#hour").text(tiempo.hora < 10 ? '0' + tiempo.hora : tiempo.hora);
@@ -216,31 +251,6 @@
                       $("#cronometro-pomodoro").css('background', 'gray');
               }
 
-          };
-
-          $('#btn-comenzar-debug').on('click', comenzar_pomodoro)
-
-          function comenzar_pomodoro(){
-              var alumno_tarea_id = $("#alumno_tarea_id").text().trim();
-              var url_tarea = "{{ url ('comenzarPomodoro') }}"
-                                .concat("/").concat(alumno_tarea_id)
-                                .concat("/").concat(fase_actual);
-
-              $.ajax({
-                  type: "GET",
-                  url: url_tarea
-              }).done(function t(response) {
-                  //alert('Client.response->'.concat(response));
-
-                  if (fase_actual == 1){
-                      fase_actual = 0;
-                      $("#header-oro").text(response);
-                  }
-                  else{
-                      fase_actual = 1;
-                      $("#header-vida").text(response);
-                  }
-              });
           };
 
       })

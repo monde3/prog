@@ -198,5 +198,45 @@ class AlumnoTarea extends Model
         return ($alumnosMejores->count()+1);
     }
 
+    /**
+     * Iniciar progreso
+     * Devuelve si se ha podido iniciar o no
+     */
+    public function iniciar(){
+        $fechaFinTarea = Carbon::parse($this->tarea->fecha_fin, 'Europe/Madrid');
+        $ahora = Carbon::now('Europe/Madrid');
+
+        if ($this->estado() === AlumnoTarea::ACTIVA and $fechaFinTarea > $ahora) {
+            $tiempo = new TiempoTarea;
+            $tiempo->alumno_tarea_id = $this->id;
+            $tiempo->inicio = Carbon::now('Europe/Madrid');
+            $tiempo->save();
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    /**
+     * Parar progreso
+     */
+    public function parar(){
+        $fechaFinTarea = Carbon::parse($this->tarea->fecha_fin, 'Europe/Madrid');
+        $ahora = Carbon::now('Europe/Madrid');
+
+        if ($this->estado() === AlumnoTarea::EN_PROGRESO) {
+            $miTiempoActivo = TiempoTarea::where('alumno_tarea_id', $this->id)->whereNull('fin')->first();
+
+            if ($fechaFinTarea > $ahora) {
+                $miTiempoActivo->fin = $ahora;
+            } else {
+                $miTiempoActivo->fin = $fechaFinTarea;
+            }
+
+            $miTiempoActivo->save();
+        }
+    }
+
 
 }

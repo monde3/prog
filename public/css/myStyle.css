@@ -3,7 +3,7 @@
 /* (amondejar) */
 /* Barras de progreso */
 
-#progress_back {
+#progress-back {
     border-radius: 25px;
     margin-bottom: auto;
 }
@@ -12,4 +12,23 @@
     border-radius: 25px;
 	min-width: 200px;
 	padding-top: 15px;"
+}
+
+button.btn-circle {
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  padding: 0px 0;
+  font-size: 10px;
+  line-height: 1.428571429;
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+.row-margin-bottom{
+	margin-bottom: 15px;
+}
+
+.text-big {
+  font-size: 23px; 
 }

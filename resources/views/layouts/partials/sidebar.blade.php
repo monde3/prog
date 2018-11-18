@@ -17,7 +17,7 @@
                     @endif
                 </div>
                 <div class="pull-left info">
-                    <p>{{ Auth::user()->nombre }}</p>
+                    <p>{{ Auth::user()->nombre }} {{ Auth::user()->apellidos }}</p>
                     
                 </div>
             </div>
@@ -27,9 +27,9 @@
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
 
-             <li class="header">MENÚ</li>
+            <li class="header">MENÚ</li>
             
-            <li class="active">
+            <li id="sidebar_item_home">
                 <a href="{{ url('home') }}">
                     <i class='fa fa-home'></i>
                     <span>{{ trans('adminlte_lang::message.home') }}</span>
@@ -37,7 +37,7 @@
             </li>
 
             @if (Auth::user()->activo and Auth::user()->rol != 'administrador')
-                <li>
+                <li id="sidebar_item_mistareas">
                     <a href="{{ url('mistareas') }}">
                         <i class='fa fa-tasks'></i>
                         <span>{{ trans('adminlte_lang::message.mistareas') }}</span>   
@@ -45,14 +45,14 @@
                 </li>
 
 
-                <li>
+                <li id="sidebar_item_mistareasfinalizadas">
                     <a href="{{ url('mistareasfinalizadas') }}">
                         <i class='fa fa-clock-o'></i>
                         <span>{{ trans('adminlte_lang::message.mistareasfinalizadas') }}</span>   
                     </a>
                 </li>
             @elseif (Auth::user()->activo and Auth::user()->rol == 'administrador')
-                <li>
+                <li id="sidebar_item_usuarios">
                     <a href="{{ url('usuarios') }}">
                         <i class='fa fa-group'></i>
                         <span>{{ trans('adminlte_lang::message.usuarios') }}</span>   

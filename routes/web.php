@@ -109,11 +109,24 @@ Route::get('crearTiempo/{id}', [
 ]);
 
 
-//[amondejar] Rutas para la gestión de pomodoros
-Route::get('comenzarPomodoro/{alumno_tarea_id}/{fase_actual}', [
-    'as' => 'comenzarPomodoro',
+//[amondejar]
+// Rutaa para la gestión de pomodoros
+Route::get('gestionPomodoro/{alumno_tarea_id}/{fase_actual}', [
+    'as' => 'gestionPomodoro',
     'middleware' => 'auth',
-    'uses' => 'MisTareasActivasController@comenzarPomodoro'
+    'uses' => 'MisTareasActivasController@gestionPomodoro'
+]);
+
+Route::get('avatar', [
+    'as' => 'avatar',
+    'middleware' => 'auth',
+    'uses' => 'AvatarController@index'
+]);
+
+Route::get('aumentarNivelAvatar/{avatar_user_id}/{valor}', [
+    'as' => 'aumentarNivelAvatar',
+    'middleware' => 'auth',
+    'uses' => 'AvatarController@aumentarNivelAvatar'
 ]);
 //[amondejar]
 

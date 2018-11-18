@@ -34,7 +34,7 @@
 								<h3 class="box-title"><b>Variables de DEBUG</b></h3>	
 							</div>
 							<div class="box-body">
-								<b>$porcentaje = {{ Auth::user()->porcentajeNivel() }}</b>
+								<b>Valor</b>
 							</div>
 						</div>
 					</div>
@@ -48,7 +48,9 @@
 							<div class="box-body">
 								<div class="col-md-5">
 									<div class="item active">
-										<img class="img-responsive img-rounded" src="{{ asset('images/avatar2.png') }}" alt="">
+										<a href="{{ url('/avatar') }}">
+											<img class="img-responsive img-rounded" src="{{ asset('images/avatar2.png') }}" alt="">
+										</a>
 									</div>
 								</div>
 								<div class="col-md-2">
@@ -62,11 +64,11 @@
 								</div>
 								<div class="col-md-3">
 									<p class="text-primary">
-										<b>+50000000</b></br>
-										<b>+50000</b></br>
-										<b>+50</b></br>
-										<b>+50</b></br>
-										<b>+50</b>
+										<b>{{ $avatar->head }}</b></br>
+										<b>{{ $avatar->body }}</b></br>
+										<b>{{ $avatar->hands }}</b></br>
+										<b>{{ $avatar->foot }}</b></br>
+										<b>{{ $avatar->weapon }}</b>
 									</p>
 								</div>
 								<div class="col-md-2">
@@ -152,8 +154,9 @@
 			editable: false,
 			eventLimit: true, // allow "more" link when too many events
 			events: urlCalendario
+
+			alert('Pomodoros: Evitar que al cerrar el modal de pomodoros queden las tareas abiertas');
 		});
-		
 	});
 </script>
 	

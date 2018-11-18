@@ -64,16 +64,21 @@ class MisTareasActivasController extends Controller {
         }
 
         $estado = $miTarea->estado();
-        $fechaFinTarea = Carbon::parse($miTarea->tarea->fecha_fin, 'Europe/Madrid');
-        $ahora = Carbon::now('Europe/Madrid');
+        //$fechaFinTarea = Carbon::parse($miTarea->tarea->fecha_fin, 'Europe/Madrid');
+        //$ahora = Carbon::now('Europe/Madrid');
 
-        if ($estado === AlumnoTarea::ACTIVA and $fechaFinTarea > $ahora) {
-            $tiempo = new TiempoTarea;
+        // if ($estado === AlumnoTarea::ACTIVA) { and $fechaFinTarea > $ahora) {
+        /*  $tiempo = new TiempoTarea;
             $tiempo->alumno_tarea_id = $alumno_tarea_id;
             $tiempo->inicio = Carbon::now('Europe/Madrid');
             $tiempo->save();
+        */
+        if ($estado === AlumnoTarea::ACTIVA) {
+            $miTarea->iniciar();
         } elseif ($estado === AlumnoTarea::EN_PROGRESO) {
-            $miTiempoActivo = TiempoTarea::where('alumno_tarea_id', $miTarea->id)->whereNull('fin')->first();
+            $miTarea->parar();
+        
+        /*    $miTiempoActivo = TiempoTarea::where('alumno_tarea_id', $miTarea->id)->whereNull('fin')->first();
 
             if ($fechaFinTarea > $ahora) {
                 $miTiempoActivo->fin = $ahora;
@@ -82,6 +87,7 @@ class MisTareasActivasController extends Controller {
             }
 
             $miTiempoActivo->save();
+        */
         }
 
 
@@ -107,56 +113,79 @@ class MisTareasActivasController extends Controller {
      *        int  $fase_actual
      * @return string
      */
-    public function comenzarPomodoro(request $request, $alumno_tarea_id, $fase_actual) {
+    public function gestionPomodoro(request $request, $alumno_tarea_id, $fase_actual) {
         $value = '';
-        $tarea = AlumnoTarea::find($alumno_tarea_id);
+        $alumnoTarea = AlumnoTarea::find($alumno_tarea_id);
         $usuario = User::find($tarea->user_id);
+        $estado = $alumnoTarea->estado();
+        $fechaFinTarea = Carbon::parse($alumnoTarea->tarea->fecha_fin, 'Europe/Madrid');
 
         // DESCANSO->POMODORO
-        // Guardamos inicio de pomodoro
+        // Guardamos INICIO de POMODORO en sesión
         // Comprobamos si el tiempo de descanso es mayor que el establecido
         if ($fase_actual == 0) {
-            // Guardamos en variable de sesión flash
-            $request->session()->flash('pomodoro'.$alumno_tarea_id, Carbon::now('Europe/Madrid'));
+            if ($estado === AlumnoTarea::ACTIVA and $fechaFinTarea > $ahora) {
 
-            // Recuperamos la variable de sesión flash
-            $descanso = $request->session()->get('descanso'.$alumno_tarea_id);
-            // La primera llamada no se habrá registrado el descanso
-            // solo se hará la inserción del instante inicial del pomodoro
-            if (!empty($descanso)) {
-                // Para evitar problemas con la zona horaria creamos los dos instantes
-                // con la misma función pasando el formato
-                $inicio = Carbon::createFromFormat('Y-m-d H:i:s', $descanso);
-                $fin = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now('Europe/Madrid'));
+                // Guardamos en variable de sesión flash
+                $request->session()->flash('pomodoro'.$alumno_tarea_id, Carbon::now('Europe/Madrid'));
 
-                $diff = $inicio->diff($fin);
+                // Recuperamos la variable de sesión flash
+                $descanso = $request->session()->get('descanso'.$alumno_tarea_id);
+                // La primera llamada no se habrá registrado el descanso
+                // solo se hará la inserción del instante inicial del pomodoro
+                if (!empty($descanso)) {
+                    // Para evitar problemas con la zona horaria creamos los dos instantes
+                    // con la misma función pasando el formato
+                    $inicio = Carbon::createFromFormat('Y-m-d H:i:s', $descanso);
+                    $fin = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now('Europe/Madrid'));
 
-                // Comprobamos los minutos (i) 
-                //if ($diff->i >= Self::DESCANSO){
-                if ($diff->s >= Self::DESCANSO){
-                    $usuario->sumarVida(Self::VIDA_SUMAR);
+                    $diff = $inicio->diff($fin);
+
+                    // Comprobamos los minutos (i) 
+                    //if ($diff->i >= Self::DESCANSO){
+                    if ($diff->s >= Self::DESCANSO){
+                        $usuario->sumarVida(Self::VIDA_SUMAR);
+                    }
                 }
+                $value = 'OK/'.$usuario->vida;
             }
-            $value = $usuario->vida;
-                
+            else{
+                $value = 'ERROR/Tarea finalizada';
+            }
         // POMODORO->DESCANSO
         // Guardamos inicio de descanso
         // Comprobamos si el tiempo de pomodoro es el correcto
         } else if ($fase_actual == 1) {
             $request->session()->flash('descanso'.$alumno_tarea_id, Carbon::now('Europe/Madrid'));
 
-            $inicio = Carbon::createFromFormat('Y-m-d H:i:s', $request->session()->get('pomodoro'.$alumno_tarea_id));
-            $fin = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now('Europe/Madrid'));
+            $inicio_pomodoro = Carbon::createFromFormat('Y-m-d H:i:s', $request->session()->get('pomodoro'.$alumno_tarea_id));
+            $fin_pomodoro = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now('Europe/Madrid'));
 
-            $diff = $inicio->diff($fin);
+            $diff = $inicio_pomodoro->diff($fin_pomodoro);
 
+            // i = MINUTOS
             //if ($diff->i >= Self::POMODORO){
             if ($diff->s >= Self::POMODORO){
                 $usuario->sumarOro(Self::ORO_SUMAR);
-            }
-            $value = $usuario->oro;
-        }
 
+                $fechaFinTarea = Carbon::parse($alumnoTarea->tarea->fecha_fin, 'Europe/Madrid');
+
+                $tiempo = new TiempoTarea;
+                $tiempo->alumno_tarea_id = $alumno_tarea_id;
+                $tiempo->inicio = $inicio_pomodoro;
+
+                if ($fechaFinTarea > $fin_pomodoro) {
+                    $tiempo->fin = $fin_pomodoro;
+                } else {
+                    $tiempo->fin = $fechaFinTarea;
+                }
+
+                $tiempo->save();
+            }
+
+            $value = 'OK/'.$usuario->oro;
+        }
+ 
         return $value;
     }
 

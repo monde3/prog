@@ -20,7 +20,7 @@
 						<h3 class="box-title"><b>Mis Tareas</b></h3>
 					</div>
 					<div class="box-body">
-					    @if(isset($tareas) and $tareas->count()>0)
+					    @if( isset($tareas) and $tareas->count() > 0 )
 						    @if (Auth::user()->rol=='alumno')
 								@include('layouts.alumno.mistareas')
 							@elseif (Auth::user()->rol=='profesor')
