@@ -128,6 +128,30 @@ Route::get('aumentarNivelAvatar/{avatar_user_id}/{valor}', [
     'middleware' => 'auth',
     'uses' => 'AvatarController@aumentarNivelAvatar'
 ]);
+
+Route::get('luchar', [
+    'as' => 'luchar',
+    'middleware' => 'auth',
+    'uses' => 'AvatarController@luchar'
+]);
+
+Route::get('lucharContra/{avatar_user_id}', [
+    'as' => 'lucharContra',
+    'middleware' => 'auth',
+    'uses' => 'AvatarController@lucharContra'
+]);
+
+Route::get('cambiarEstadoAvatar/{avatar_user_id}/{estado}', [
+    'as' => 'cambiarEstadoAvatar',
+    'middleware' => 'auth',
+    'uses' => 'AvatarController@cambiarEstadoAvatar'
+]);
+
+Route::get('mostrarModalFirstLogin', [
+    'as' => 'mostrarModalFirstLogin',
+    'middleware' => 'auth',
+    'uses' => 'UserController@mostrarModalFirstLogin'
+]);
 //[amondejar]
 
 

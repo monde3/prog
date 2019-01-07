@@ -36,25 +36,39 @@
       var url_actual = window.location.protocol + "//" + window.location.host + window.location.pathname;
       var sideBarItem = $("#sidebar_item_home");
       if (url_actual.search("mistareasfinalizadas") > 0){
-        sideBarItem = $("#sidebar_item_mistareasfinalizadas");
+          sideBarItem = $("#sidebar_item_mistareasfinalizadas");
       }
       else if (url_actual.search("mistareas") > 0 || url_actual.search("tareaalumno") > 0){
-        sideBarItem = $("#sidebar_item_mistareas");
+          sideBarItem = $("#sidebar_item_mistareas");
       }
       else if (url_actual.search("usuarios") > 0){
-        sideBarItem = $("#sidebar_item_usuarios");
+          sideBarItem = $("#sidebar_item_usuarios");
       }
       sideBarItem.addClass('active');
 
-      var mostrarModal = ({{ Auth::user()->mostrarModalFirstLogin() }});
       // Modal de primer login en plantilla app.blade.php
-      if ( mostrarModal > 0){
-        $("#first_login").modal();
-        $("#header-exp").html(mostrarModal);
-      }
+      var url_modal = "{{ url ('mostrarModalFirstLogin') }}";
+        $.ajax({
+          type: "GET",
+          url: url_modal
+        }).done(function t(response) {
+          var mostrarModal = response;
+          if ( mostrarModal > 0){
+              $("#modal_mensaje_titulo").text("¡Felicidades!");
+              $("#modal_mensaje_texto").text("Has conseguido 5 puntos de experiencia por el primer login del día");
+              $("#modal_mensaje_pie").text("+5 EXP");
+              $("#modal_mensaje").show();
+          }else if ( mostrarModal < 0){
+              $("#modal_mensaje_titulo").text("¡Vaya!");
+              $("#modal_mensaje_texto").text("Has perdido 2 puntos de experiencia por haber permanecido más de un día sin entrar");
+              $("#modal_mensaje_pie").text("-2 EXP");
+              $("#modal_mensaje").show();
+          }
+      });
       
-    	var porcentaje = ({{ Auth::user()->porcentajeNivel() }}) + '%';
-    	// Establecemos el progreso en el nivel actual
+      // Establecemos el progreso en el nivel actual
+    	var porcentaje = ({{ Auth::user()->avatar->porcentajeNivel() }}) + '%';
       $("#level_bar").width(porcentaje);
+      $("#progress_li").prop('title', porcentaje);
     });
 </script>

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -18,7 +20,9 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    use AuthenticatesUsers {
+        login as protected traitlogin;
+    }
 
     /**
      * Where to redirect users after login.
@@ -36,4 +40,21 @@ class LoginController extends Controller
     {
         $this->middleware('guest', ['except' => 'logout']);
     }
+
+
+    /**
+     * (amondejar)
+     * Sobreescribimos la función de login del TRAIT AuthenticatesUsers
+     * para gestionar la recompensa por primer login del dia
+     *
+     */
+    public function login(Request $request)
+    {
+        $returnLogin = $this->traitlogin($request);
+        if (isset($request->user()->id)) {
+            $request->user()->guardarLastLogin($request);
+        }
+        return $returnLogin;
+    }
+
 }

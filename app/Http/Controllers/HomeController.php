@@ -55,11 +55,11 @@ class HomeController extends Controller
                 return $tareaAlumno->tarea;
             })->take(5);
 
-            //Calculamos el nivel en el que nos encontramos (amondejar)
-            $nivelAvatar = floor($usuario->exp / User::PUNTOS_POR_NIVEL);
-
             // (amondejar) Obtenemos información del avatar
             $avatar = Avatar::where('user_id', $usuario->id)->get()->first();
+
+            //Calculamos el nivel en el que nos encontramos (amondejar)
+            $nivelAvatar = floor($avatar->exp / Avatar::PUNTOS_POR_NIVEL);
 
         } elseif  ($usuario->rol == 'profesor'){
             //Obtenemos las próximas cinco tareas ordenadas por el tiempo que finalizan

@@ -24,7 +24,7 @@
                 @if (Auth::user()->activo and Auth::user()->rol!='administrador')
                     @if (Auth::user()->rol == 'alumno')
                         <!-- Level area -->
-                        <li class="progress-li">
+                        <li class="progress-li" id="progress_li">
                             <div id="progress-back" class="progress">
                                 <div id="level_bar" class="progress-bar progress-bar-success progress-bar-striped"></div>
                             </div>
@@ -33,19 +33,19 @@
                         <li>
                             <a href="{{ url('/avatar') }}" title="{{ trans('adminlte_lang::message.experience') }}">
                                 <i class='glyphicon glyphicon-star'></i>
-                                <strong id="header-exp">{{ Auth::user()->exp }}</strong>
+                                <strong id="header-exp">{{ Auth::user()->avatar->exp }}</strong>
                             </a>
                         </li>
                         <li>
                             <a href="{{ url('/avatar') }}" title="{{ trans('adminlte_lang::message.life') }}">
                                 <i class='glyphicon glyphicon-heart'></i>
-                                <strong id="header-vida">{{ Auth::user()->vida }}</strong>
+                                <strong id="header-vida">{{ Auth::user()->avatar->vida }}</strong>
                             </a>
                         </li>
                         <li>
                             <a href="{{ url('/avatar') }}" title="{{ trans('adminlte_lang::message.gold') }}">
                                 <i class='glyphicon glyphicon-usd'></i>
-                                <strong id="header-oro">{{ Auth::user()->oro }}</strong>
+                                <strong id="header-oro">{{ Auth::user()->avatar->oro }}</strong>
                             </a>
                         </li>
                     @endif

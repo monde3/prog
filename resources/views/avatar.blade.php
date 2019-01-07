@@ -33,7 +33,7 @@
 						<h3 class="box-title"><b>Variables de DEBUG</b></h3>	
 					</div>
 					<div class="box-body">
-						<b>$porcentaje = {{ Auth::user()->porcentajeNivel() }}</b>
+						<b>$porcentaje = {{ Auth::user()->avatar->porcentajeNivel() }}</b>
 					</div>
 				</div>
 			</div>
@@ -49,7 +49,7 @@
 					<div class="box-body">
 						<div class="col-sm-3">
 							<div class="item active">
-								<img class="img-responsive img-rounded" src="{{ asset('images/avatar2.png') }}" alt="">
+								<img id="avatar_img" class="img-responsive img-rounded" src="{{ $avatar->rutaImagen() }}" alt="alt">
 							</div>
 						</div>
 						<div class="col-sm-4">
@@ -146,6 +146,41 @@
 							<p class="text-primary text-center" style="font-size: 3em">
 								<b>{{ $nivelAvatar }}</b>
 							</p>
+
+						</div>
+						<div class="col-sm-2">
+					    @if($avatar->estado == 'herido')
+							<select name="role" class="form-control" disabled>
+					    @else
+							<select name="role" class="form-control" >
+					    @endif
+						    
+						    @if($avatar->estado == 'activo')
+						    	<option value="activo" selected>ACTIVO</option>
+						    @else
+						    	<option value="activo">ACTIVO</option>
+						    @endif
+						    
+						    @if($avatar->estado == 'inactivo')
+						    	<option value="inactivo" selected>INACTIVO</option>
+						    @else
+						    	<option value="inactivo">INACTIVO</option>
+						    @endif
+						    
+						    @if($avatar->estado == 'herido')
+						    	<option value="herido" disabled selected>HERIDO</option>
+						    @else
+						    	<option value="herido" disabled>HERIDO</option>
+						    @endif
+							</select>
+
+						    @if($avatar->estado == 'activo')
+			                <a id="btn_luchar" class="btn btn-block btn-danger" href="{{ route('luchar') }}">
+						    @else
+		                	<a id="btn_luchar" class="btn btn-block btn-danger disabled" href="{{ route('luchar') }}">
+						    @endif
+			                	<b>Luchar</b>
+			                </a>
 						</div>
 					</div>
 				</div>
@@ -163,6 +198,36 @@
     @if (Auth::user()->rol=='alumno')
 
     	<script type="text/javascript">
+
+    		$('select').on('change', function() {
+                var avatar_user_id = $("#avatar_user_id").text().trim();
+			  	var url_estado = "{{ url ('cambiarEstadoAvatar') }}"
+								.concat("/").concat(avatar_user_id)
+								.concat("/").concat(this.value);
+				$.ajax({
+				  type: "GET",
+				  url: url_estado
+				}).done(function t(response) {
+
+					var resp = response.split("\\");
+					if(resp[0]=="error"){
+						$("#modal_mensaje_titulo").text("Vida insuficiente");
+						$("#modal_mensaje_texto").text(resp[1]);
+						$("#modal_mensaje").show();
+					}
+					else{
+            			$("#avatar_img").attr("src", resp[2]);
+
+            			if(resp[1] == 'inactivo'){
+            				$("#btn_luchar").addClass('disabled');
+            			}
+            			else{
+            				$("#btn_luchar").removeClass('disabled');
+            			}
+					}
+                });
+			});
+
     		function aumentar_nivel(clicked_id){
     			var valor = get_valor(clicked_id);
 

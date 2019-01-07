@@ -118,6 +118,9 @@
               //$("btn-comenzar").text('Comenzar');
               //reset_all();
               // Refrescamos la página para recargar los parámetros de la tarea (estado y nuevos tiempos)
+              if(fase_actual == 1){
+                gestion_intervalo();
+              }
               location.reload();
           })
 
@@ -131,7 +134,6 @@
                   type: "GET",
                   url: url_tarea
               }).done(function t(response) {
-                  alert('Client.response->'.concat(response));
                   var resp = response.split("/");
                   if(resp[0]=='OK'){
                     if (fase_actual == 1){

@@ -117,11 +117,15 @@ class RegisterController extends Controller
             ]);
             Avatar::create([
                 'user_id' => $user->id,
+                'oro' => 0,
+                'exp' => 0,
+                'vida' => 0,
                 'head' => 0,
                 'body' => 0,
                 'hands' => 0,
                 'foot' => 0,
                 'weapon' => 0,
+                'estado' => 'activo',
             ]);
             return $user;
         } else { 

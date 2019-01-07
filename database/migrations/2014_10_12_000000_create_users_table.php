@@ -23,9 +23,6 @@ class CreateUsersTable extends Migration
             $table->enum('rol', ['alumno', 'profesor', 'administrador']);
             $table->boolean('activo');
             //Gamificación
-            $table->integer('oro');
-            $table->integer('exp');
-            $table->integer('vida');
             $table->dateTime('last_login')->comment('Fecha de último login');
 
             $table->rememberToken();

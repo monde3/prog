@@ -64,6 +64,14 @@ class UserController extends Controller
         $usuario->save();
 
         return redirect(url('usuarios'));
+    }
     
+    /**
+     * (amondejar)
+     * Comprobamos si hay que mostrar el modal de recompensa por primer login
+     */
+    public function mostrarModalFirstLogin(Request $request)
+    {
+        return $request->user()->mostrarModalFirstLogin($request);
     }
 }

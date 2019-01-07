@@ -11,6 +11,7 @@
 					<div id="modal_mensaje_texto"></div>
 				</div>
 				<div class="modal-footer">
+					<div id="modal_mensaje_pie"></div>
 					<input id="btn-cerrar-error" type="button" class="btn btn-primary" data-dismiss="modal" onclick="modalToggle()" value="Cerrar">
 				</div>
 			</div>

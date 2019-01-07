@@ -5,9 +5,11 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 use App\AlumnoTarea;
 use App\Tarea;
+use App\Avatar;
 use Carbon\Carbon;
 
 class User extends Authenticatable
@@ -20,7 +22,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'dni', 'nombre', 'apellidos', 'email', 'password', 'rol', 'activo', 'oro', 'exp', 'vida', 'last_login'
+        'dni', 'nombre', 'apellidos', 'email', 'password', 'rol', 'activo', 'last_login'
     ];
 
     /**
@@ -31,13 +33,6 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-
-    /*
-     (amondejar)
-     */
-    const PUNTOS_POR_NIVEL = 100; //Intervalo con el que se sube de nivel
-    const VIDA_MAXIMA = 100; // Puntuación máxima de vida que se puede obtener
-    const EXP_ADICIONAL = 20; // Porcentaje de puntos de vida, adicionales al sumar experiencia
 
 
     /**
@@ -54,6 +49,14 @@ class User extends Authenticatable
     public function tareasProfesor()
     {
         return $this->hasMany('App\Tarea');
+    }
+    
+    /**
+     * Obtiene el avatar del alumno
+     */
+    public function avatar()
+    {
+        return $this->hasOne('App\Avatar', 'user_id', 'id');
     }
 
 
@@ -152,61 +155,47 @@ class User extends Authenticatable
         return $numNotificaciones;
     }
 
-    // (amondejar) Nos indica si debemos mostrar el modal de primer login
-    public function mostrarModalFirstLogin(){
-        if ($this->rol != 'alumno'){
-            return 0;
-        }
-
+    // (amondejar)
+    // Guardamos la fecha del último login
+    // En variable de sesión de tipo FLASH indicamos que
+    // hay que mostrar modal y sumar exp
+    public function guardarLastLogin(Request $request){
         // Si es el primer login del día guardamos la fecha y otorgamos 5 exp (amondejar)
+        $avatar = Avatar::where('user_id', $this->id)->get()->first();
         $dateLastLogin = Carbon::parse(Carbon::parse($this->last_login)->toDateString());
         $today = Carbon::today();
+
         $mostrarModal = $dateLastLogin->diffInDays($today);
+        // Guardamos en variable de sesión flash
+        $request->session()->put('mostrarModalFirstLogin', $mostrarModal);
 
-        if ($mostrarModal > 0){
-            $this->sumarExperiencia(5);
-            $this->last_login = $today;
+        if ($mostrarModal >= 1){
+            $this->last_login = Carbon::today();
             $this->save();
-            $mostrarModal = $this->exp;
+            if ($mostrarModal == 1){
+                $avatar->sumarExperiencia(5);
+            }
+            else if ($mostrarModal > 1){
+                $avatar->restarExperiencia(2);
+            }
         }
-        return $mostrarModal;
     }
 
-    // (amondejar) Puntos que hemos conseguido en el nivel actual
-    public function porcentajeNivel(){
-        if ($this->rol != 'alumno'){
-            return 0;
+    // (amondejar)
+    // Nos indica si debemos mostrar el modal de primer login
+    public function mostrarModalFirstLogin(Request $request){
+        // Recuperamos la variable de sesión flash
+        $mostrarModal = $request->session()->pull('mostrarModalFirstLogin');
+
+        if (($this->rol == 'alumno') && isset($mostrarModal) && ($mostrarModal > 0))
+        {
+            if ($mostrarModal == 1){
+                return 1;
+            }
+            else if ($mostrarModal > 1){
+                return -1;
+            }
         }
-        $puntosEnNivel = $this->exp % Self::PUNTOS_POR_NIVEL;
-        $porcentaje = $puntosEnNivel * 100 / Self::PUNTOS_POR_NIVEL;
-
-        return $porcentaje;
-    }
-
-    public function sumarExperiencia($cantidad){
-        $puntos_adicionales = intdiv($this->vida, Self::EXP_ADICIONAL);
-
-        $this->exp += $cantidad;
-        $this->save();
-    }
-
-    public function sumarVida($cantidad){
-        if ($this->vida < Self::VIDA_MAXIMA) {
-            $this->vida += $cantidad;
-        } else if (($this->vida + $cantidad) > Self::VIDA_MAXIMA) {
-            $this->vida = Self::VIDA_MAXIMA;
-        }
-        
-        $this->save();
-    }
-
-    public function sumarOro($cantidad){
-            $this->oro += $cantidad;
-            $this->save();
-    }
-
-    public function restarOro($cantidad){
-            $this->oro -= $cantidad;
-            $this->save();
+        return 0;
     }
 }

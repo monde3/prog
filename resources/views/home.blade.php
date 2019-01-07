@@ -35,6 +35,7 @@
 							</div>
 							<div class="box-body">
 								<b>Valor</b>
+								<p>{{ asset('images/avatar2.png') }}</p>
 							</div>
 						</div>
 					</div>
@@ -49,7 +50,7 @@
 								<div class="col-md-5">
 									<div class="item active">
 										<a href="{{ url('/avatar') }}">
-											<img class="img-responsive img-rounded" src="{{ asset('images/avatar2.png') }}" alt="">
+											<img class="img-responsive img-rounded" src="{{ $avatar->rutaImagen() }}" alt="">
 										</a>
 									</div>
 								</div>
@@ -154,8 +155,6 @@
 			editable: false,
 			eventLimit: true, // allow "more" link when too many events
 			events: urlCalendario
-
-			alert('Pomodoros: Evitar que al cerrar el modal de pomodoros queden las tareas abiertas');
 		});
 	});
 </script>
