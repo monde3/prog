@@ -5,12 +5,10 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Gestión mediante Pomodoros</h5>
+        <h3 class="modal-title">{{ trans('adminlte_lang::message.timemanaging') }}</h3>
       </div>
-        <h1 id="h1-fase" align="center">DEBUG</h1>
-                <div id="div-debug"></div>
       <div class="modal-body">
-        <h1 id="h1-fase" align="center">CRONÓMETRO</h1>
+        <h4 id="h1-fase" align="center">{{ trans('adminlte_lang::message.timer')}}</h4>
         <div id="timer">
             <div class="container" id="cronometro-pomodoro">
                 <div id="hour">00</div>
@@ -19,12 +17,12 @@
                 <div class="divider">:</div>
                 <div id="second">00</div>                
             </div>
-            <button id="btn-comenzar">Comenzar</button>
+            <button id="btn-comenzar">{{ trans('adminlte_lang::message.start')}}</button>
         </div>
 
       </div>
       <div class="modal-footer">
-        <input id="btn-cerrar" type="button" class="btn btn-primary" data-dismiss="modal" value="Cerrar">
+        <input id="btn-cerrar" type="button" class="btn btn-primary" data-dismiss="modal" value="{{ trans('adminlte_lang::message.close') }}">
       </div>
     </div>
   </div>
@@ -34,6 +32,7 @@
   @parent
   
   <script>
+
       $(document).ready(function(){
           // FASES //
           const POMODORO = 0;
@@ -65,7 +64,7 @@
 
           var fase_actual = 0;
 
-          $("btn-comenzar").text('Comenzar');
+          $("btn-comenzar").text('{{ trans('adminlte_lang::message.start')}}');
 
           $("#btn-comenzar").click(function(){
               //COMENZAR
@@ -74,24 +73,18 @@
                   gestion_intervalo();
                   audio_alarm.pause();
                   audio_alarm.currentTime = 0;
-                  $(this).text('Detener');                      
-                  titulo.text('Pomodoro '+ (tiempo.fase + 1));  
+                  $(this).text('{{ trans('adminlte_lang::message.stop')}}');                      
+                  titulo.text('{{ trans('adminlte_lang::message.work')}}');  
                   tiempo_corriendo = setInterval(intervalo, 1000);               
                   tiempo.fase++;
-              }
-              //DETENER
-              else if( tiempo.fase % 2 == 0 )
-              {
-                  $(this).text('Comenzar');
-                  reset_all();
               }
               //DESCANSAR
               else if((tiempo.fase % 4) == PRE_DESCANSO)
               {
                   gestion_intervalo();
                   reset_clock();
-                  $(this).text('Detener');
-                  titulo.text('DESCANSO ' + (Math.round(tiempo.fase/2) + 1));
+                  $(this).text('{{ trans('adminlte_lang::message.stop')}}');
+                  titulo.text('{{ trans('adminlte_lang::message.rest')}}');
                   $("#cronometro-pomodoro").css('background', 'gray');
                   tiempo.fase++;
                   audio_ding.play();
@@ -101,28 +94,29 @@
               {
                   gestion_intervalo();
                   reset_clock();
-                  $(this).text('Detener'); 
-                  titulo.text('POMODORO ' + (Math.round(tiempo.fase/2) + 1));   
+                  $(this).text('{{ trans('adminlte_lang::message.stop')}}'); 
+                  titulo.text('{{ trans('adminlte_lang::message.work')}}');  
                   $("#cronometro-pomodoro").css('background', 'gray');                   
                   tiempo.fase++;
                   audio_ding.play();
               }
+              //DETENER
               else 
               {
-                  $(this).text('Comenzar');
+                  $(this).text('{{ trans('adminlte_lang::message.start')}}');
                   reset_all();
               }
           })
 
-          $("#btn-cerrar").click(function(){
-              //$("btn-comenzar").text('Comenzar');
-              //reset_all();
-              // Refrescamos la página para recargar los parámetros de la tarea (estado y nuevos tiempos)
+          //Capturamos el evento que cierra el modal
+          $('#modal_pomodoro').on('hidden.bs.modal', function(){ 
+              // Refrescamos la página para recargar 
+              // los parámetros de la tarea (estado y nuevos tiempos)
               if(fase_actual == 1){
-                gestion_intervalo();
+                  gestion_intervalo();
               }
               location.reload();
-          })
+          }
 
           function gestion_intervalo(){
               var alumno_tarea_id = $("#alumno_tarea_id").text().trim();
@@ -148,7 +142,7 @@
                   else{
                     reset_all();
                     $("#modal_pomodoro").modal('toggle');
-                    $("#modal_mensaje_titulo").text("Aviso");
+                    $("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.warning') }}");
                     $("#modal_mensaje_texto").text(resp[1]);
                     $("#modal_mensaje").show();
                   }
@@ -173,7 +167,7 @@
 
           function reset_all(){
               $("#cronometro-pomodoro").css('background', 'gray');
-              titulo.text('Cronómetro');
+              titulo.text('{{ trans('adminlte_lang::message.timer') }}');
                
               reset_clock();
               tiempo.fase = -1;
@@ -188,7 +182,7 @@
           function time_out(){
               titulo.text('Tiempo agotado');
               $("#cronometro-pomodoro").css('background', 'gray');
-              boton.text('Comenzar');
+              boton.text('{{ trans('adminlte_lang::message.start')}}');
 
               reset_clock();
               tiempo.fase = -1;
@@ -227,7 +221,7 @@
 
               if(tiempo.fase % 4 == POMODORO && tiempo.segundo == TIEMPO_POMODORO)
               {
-                  phase_over('Descansar');
+                  phase_over('{{ trans('adminlte_lang::message.rest')}}');
               }
               else if(tiempo.fase % 4 == PRE_DESCANSO && tiempo.segundo == TIEMPO_INTERACCION)
               {
@@ -235,7 +229,7 @@
               }
               else if(tiempo.fase % 4 == DESCANSO && tiempo.segundo == TIEMPO_DESCANSO)
               {
-                  phase_over('Pomodoro');
+                  phase_over('{{ trans('adminlte_lang::message.work')}}');
               }
               else if(tiempo.fase % 4 == PRE_POMODORO && tiempo.segundo == TIEMPO_INTERACCION)
               {

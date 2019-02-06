@@ -16,17 +16,6 @@
 		<div class="row">
 			<div class="col-md-10 col-md-offset-1">
 
-
-				<div class="box box-solid box-primary">
-					<div class="box-header with-border">
-						<h3 class="box-title"><b>Variables de DEBUG</b></h3>	
-					</div>
-					<div class="box-body">
-						<b>$avatares = yeah</b>
-					</div>
-				</div>
-
-
 				<div class="box box-solid box-primary">
 					<div class="box-header with-border">
 						<h3 class="box-title"><b>{{ trans('adminlte_lang::message.opponents') }}</b></h3>
@@ -47,28 +36,28 @@
 								    <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1"/>
 							  	</thead>
 							  	<tbody>
-							  		@foreach ($avatares as $avatar_)
+							  		@foreach ($avatares as $avatar)
 							        <tr>
 							        	<td style="display:none;">
-											{{ $avatar_->user_id }}
+											{{ $avatar->user_id }}
 										</td>
 										<td class="hidden-xs hidden-sm col-md-1 col-lg-1">
 											<div class="item active">
-												<img class="img-responsive img-rounded" src="{{ $avatar_->rutaImagen() }}" alt="">
+												<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'avatar']) }}" alt="">
 											</div>
 										</td>
 										<td class="col-md-1 col-lg-1">
-											{{ $avatar_->user_id }}
+											{{ $avatar->user_id }}
 										</td>
 										<td class="col-md-1 col-lg-1">
-											{{ $avatar_->alumno->nombre }} {{ $avatar_->alumno->apellidos }}
+											{{ $avatar->alumno->nombre }} {{ $avatar->alumno->apellidos }}
 										</td>
 										<td class="hidden-xs hidden-sm col-md-1 col-lg-1">
-											{{ $avatar_->exp }}
+											{{ $avatar->exp }}
 										</td>
 										<td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
 											<a class="btn btn-block btn-info"
-												onclick="luchar({{ $avatar_->user_id }})">
+												onclick="luchar({{ $avatar->user_id }})">
 												{{ trans('adminlte_lang::message.luchar') }}
 											</a>
 										</td>
@@ -77,11 +66,11 @@
 							  	</tbody>
 							</table>
 						@else
-							No hay tareas activas
+							{{ trans('adminlte_lang::message.noopponents') }}
 						@endif
-						
 					</div>
 				</div>
+
 			</div>
 		</div>
 	</div>
@@ -110,10 +99,12 @@
 						if(resp[0]=="vic"){
 							$("#modal_mensaje_titulo").text("VICTORIA");
 							$("#modal_mensaje_texto").text("¡Enhorabuena, has ganado!");
+              				$("#modal_mensaje_pie").text("+{{ \App\Avatar::ORO_VICTORIA }} ORO");
 							$("#modal_mensaje").show();
 						}else if(resp[0]=="der"){
 							$("#modal_mensaje_titulo").text("DERROTA");
 							$("#modal_mensaje_texto").text("Lástima, perdiste.");
+              				$("#modal_mensaje_pie").text("");
 							$("#modal_mensaje").show();
 						}
 						$("#header-oro").text(resp[1]);

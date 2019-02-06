@@ -54,21 +54,23 @@
         }).done(function t(response) {
           var mostrarModal = response;
           if ( mostrarModal > 0){
-              $("#modal_mensaje_titulo").text("¡Felicidades!");
-              $("#modal_mensaje_texto").text("Has conseguido 5 puntos de experiencia por el primer login del día");
+              $("#modal_mensaje_titulo").text("{{trans('adminlte_lang::message.congrats')}}");
+              $("#modal_mensaje_texto").text("{{trans('adminlte_lang::message.expfirstloginok')}}");
               $("#modal_mensaje_pie").text("+5 EXP");
               $("#modal_mensaje").show();
           }else if ( mostrarModal < 0){
-              $("#modal_mensaje_titulo").text("¡Vaya!");
-              $("#modal_mensaje_texto").text("Has perdido 2 puntos de experiencia por haber permanecido más de un día sin entrar");
+              $("#modal_mensaje_titulo").text("{{trans('adminlte_lang::message.vaya')}}");
+              $("#modal_mensaje_texto").text("{{trans('adminlte_lang::message.expfirstloginfail')}}");
               $("#modal_mensaje_pie").text("-2 EXP");
               $("#modal_mensaje").show();
           }
       });
-      
       // Establecemos el progreso en el nivel actual
-    	var porcentaje = ({{ Auth::user()->avatar->porcentajeNivel() }}) + '%';
-      $("#level_bar").width(porcentaje);
-      $("#progress_li").prop('title', porcentaje);
+      if('{{ Auth::user()->rol }}' == 'alumno'){
+        var porcentaje = ({{ Auth::user()->porcentajeNivel() }}) + '%';
+        $("#level_bar").width(porcentaje);
+        $("#progress_li").prop('title', porcentaje);
+      }
+
     });
 </script>

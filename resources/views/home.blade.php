@@ -50,31 +50,75 @@
 								<div class="col-md-5">
 									<div class="item active">
 										<a href="{{ url('/avatar') }}">
-											<img class="img-responsive img-rounded" src="{{ $avatar->rutaImagen() }}" alt="">
+											<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'avatar']) }}" alt="">
 										</a>
 									</div>
 								</div>
-								<div class="col-md-2">
-									<p class="text-primary">
-										<b>Cabeza</b></br>
-										<b>Torso</b></br>
-										<b>Manos</b></br>
-										<b>Pies</b></br>
-										<b>Arma</b>
-									</p>
+								<div class="col-md-5">
+									<div class="row">
+										<div class="col-md-5">
+										@if($avatar->img_head!=0)
+											<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'head']) }}" alt="">
+										@else
+											<b>{{ trans('adminlte_lang::message.head') }}</b>
+										@endif
+										</div>
+										<div class="col-md-2">
+											<b>{{ $avatar->head }}</b>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-5">
+										@if($avatar->img_body!=0)
+											<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'body']) }}" alt="">
+										@else
+											<b>{{ trans('adminlte_lang::message.body') }}</b>
+										@endif
+										</div>
+										<div class="col-md-2">
+											<b>{{ $avatar->body }}</b>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-5">
+										@if($avatar->img_hands!=0)
+											<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'hands']) }}" alt="">
+										@else
+											<b>{{ trans('adminlte_lang::message.hands') }}</b>
+										@endif
+										</div>
+										<div class="col-md-2">
+											<b>{{ $avatar->hands }}</b>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-5">
+										@if($avatar->img_feet!=0)
+											<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'feet']) }}" alt="">
+										@else
+											<b>{{ trans('adminlte_lang::message.feet') }}</b>
+										@endif
+										</div>
+										<div class="col-md-2">
+											<b>{{ $avatar->feet }}</b>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-5">
+										@if($avatar->img_weapon!=0)
+											<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'weapon']) }}" alt="">
+										@else
+											<b>{{ trans('adminlte_lang::message.weapon') }}</b>
+										@endif
+										</div>
+										<div class="col-md-2">
+											<b>{{ $avatar->weapon }}</b>
+										</div>
+									</div>
 								</div>
-								<div class="col-md-3">
+								<div class="col-md-1">
 									<p class="text-primary">
-										<b>{{ $avatar->head }}</b></br>
-										<b>{{ $avatar->body }}</b></br>
-										<b>{{ $avatar->hands }}</b></br>
-										<b>{{ $avatar->foot }}</b></br>
-										<b>{{ $avatar->weapon }}</b>
-									</p>
-								</div>
-								<div class="col-md-2">
-									<p class="text-primary">
-										<b>Nivel</b></br>
+										<b>{{ trans('adminlte_lang::message.level') }}</b></br>
 									</p>
 									<p class="text-primary text-center" style="font-size: 3em">
 										<b>{{ $nivelAvatar }}</b>

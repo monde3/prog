@@ -44,6 +44,7 @@ desired effect
         <!-- Main content -->
         <section class="content">
             <!-- Your Page Content Here -->
+            @include('layouts.partials.messages')
             @yield('main-content')
         </section><!-- /.content -->
     </div><!-- /.content-wrapper -->

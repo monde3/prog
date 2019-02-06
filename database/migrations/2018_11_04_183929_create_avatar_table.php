@@ -15,17 +15,19 @@ class CreateAvatarTable extends Migration
     {
         Schema::create('avatar', function (Blueprint $table) {
             
-            $table->integer('user_id')->primary();
+            $table->increments('id');
+            $table->integer('user_id')->unsigned()->index()->default(1);
             $table->integer('oro');
             $table->integer('exp');
             $table->integer('vida');
             $table->integer('head');
             $table->integer('body');
             $table->integer('hands');
-            $table->integer('foot');
+            $table->integer('feet');
             $table->integer('weapon');
             $table->enum('estado', ['activo', 'inactivo', 'herido']);
 
+            $table->unique(['user_id']);
             //Alumno
             $table->foreign('user_id')
                   ->references('id')->on('users')

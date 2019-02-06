@@ -3,6 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+
+use App\Imagen;
 
 class Avatar extends Model
 {
@@ -12,7 +15,7 @@ class Avatar extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id','oro','exp','vida','head','body','hands','foot','weapon','estado'
+        'user_id','oro','exp','vida','head','body','hands','feet','weapon','estado','img_avatar','img_head','img_body','img_hands','img_feet','img_weapon'
     ];
 
     /*
@@ -23,11 +26,6 @@ class Avatar extends Model
     const EXP_ADICIONAL = 20; // Porcentaje de puntos de vida, adicionales al sumar experiencia
     const ORO_VICTORIA = 10; // Puntos de oro por ganar una batalla
     const VIDA_HERIDO = 20; // Puntos de vida mínimos para estado activo/inactivo
-
-    /**
-     * Primary key
-     */
-    protected $primaryKey = 'user_id';
 
     protected $table = 'avatar';
     
@@ -43,6 +41,21 @@ class Avatar extends Model
     {
         return $this->belongsTo('App\User', 'user_id');
     }
+    
+    /**
+     * Obtiene las imagenes que tiene asociadas un avatar
+     */
+    public function avatarImagenes()
+    {
+        return $this->hasMany('App\AvatarImagen');
+    }
+
+    // (amondejar)
+    // Calculamos el nivel en el que nos encontramos
+    public function nivelAvatar()
+    {
+            return floor($this->exp / Self::PUNTOS_POR_NIVEL);
+    }
 
     // (amondejar) Puntos que hemos conseguido en el nivel actual
     public function porcentajeNivel(){
@@ -55,11 +68,23 @@ class Avatar extends Model
         return $porcentaje;
     }
 
+    /** (amondejar)
+     * Aumenta los puntos de experiencia
+     *
+     * @param $cantidad - Puntos a sumar
+     * @return booleano - true si aumenta de nivel y false si no
+     */
     public function sumarExperiencia($cantidad){
         $puntos_adicionales = intdiv($this->vida, Self::EXP_ADICIONAL);
-
-        $this->exp += $cantidad;
+        $nivel_antes = $this->nivelAvatar();
+        
+        $this->exp += $cantidad + $puntos_adicionales;
         $this->save();
+
+        if ($nivel_antes != $this->nivelAvatar()){
+            return 1;
+        }
+        return 0;
     }
 
     public function restarExperiencia($cantidad){
@@ -99,12 +124,13 @@ class Avatar extends Model
     }
 
     public function restarOro($cantidad){
-        if (($this->oro - $cantidad) <= 0) {
-            $this->oro = 0;
-        } else if (($this->oro - $cantidad) > 0) {
+        if (($this->oro - $cantidad) < 0) {
+            return false;
+        } else {
             $this->oro -= $cantidad;
         }
         $this->save();
+        return true;
     }
 
     public function sumarHead($cantidad){
@@ -122,8 +148,8 @@ class Avatar extends Model
             $this->save();
     }
 
-    public function sumarFoot($cantidad){
-            $this->foot += $cantidad;
+    public function sumarFeet($cantidad){
+            $this->feet += $cantidad;
             $this->save();
     }
 
@@ -132,21 +158,62 @@ class Avatar extends Model
             $this->save();
     }
 
-    public function rutaImagen(){
+    public function imagePath($parte){
         if($this->vida < 20){
             $this->cambiarEstado('herido');
+        }else{
+            if($this->estado == 'herido'){
+                $this->cambiarEstado('inactivo');
+            }
         }
-        $url = '';
-        if($this->estado == 'activo'){
-            $url = asset('images/avatar-activo.png');
+
+        $image_id = 0;
+
+        if(($parte == 'avatar')){
+            if(($this->estado == 'activo')){
+                $image_id = $this->img_activo;
+            }
+            if(($this->estado == 'inactivo')){
+                $image_id = $this->img_inactivo;
+            }
+            if(($this->estado == 'herido')){
+                $image_id = $this->img_herido;
+            }
+        }else if(($parte == 'head')){
+            $image_id = $this->img_head;
+        }else if(($parte == 'body')){
+            $image_id = $this->img_body;
+        }else if(($parte == 'hands')){
+            $image_id = $this->img_hands;
+        }else if(($parte == 'feet')){
+            $image_id = $this->img_feet;
+        }else if(($parte == 'weapon')){
+            $image_id = $this->img_weapon;
         }
-        if($this->estado == 'inactivo'){
-            $url = asset('images/avatar-inactivo.png');
+
+        $imagen = Imagen::find($image_id);
+        
+        $image_path = '';
+        if(isset($imagen)){
+            $image_path = Imagen::where('id', $image_id)->firstOrFail()->filename;
         }
-        if($this->estado == 'herido'){
-            $url = asset('images/avatar-herido.png');
+
+        // Primero vemos si existe la imagen personalizada
+        $exists = Storage::disk('images')->exists($image_path);
+
+        // En caso de que no exista o no esté configurada
+        if(($parte=='avatar') && ($this->img_avatar == 0) && (!$exists)){
+            if($this->estado == 'activo'){
+                $image_path = 'avatar-activo.png';
+            }
+            if($this->estado == 'inactivo'){
+                $image_path = 'avatar-inactivo.png';
+            }
+            if($this->estado == 'herido'){
+                $image_path = 'avatar-herido.png';
+            }
         }
-        return $url;
+        return $image_path;
     }
 
     /**
@@ -164,9 +231,9 @@ class Avatar extends Model
         if ($this->vida >= 20 and $this->estado = 'activo'){
             // Obtenemos la suma de los puntos de cada usuario
             $points_usuario = $this->head + $this->body + $this->hands + 
-                        $this->foot + $this->weapon;
+                        $this->sm + $this->weapon;
             $points_oponente = $oponente->head + $oponente->body + $oponente->hands + 
-                        $oponente->foot + $oponente->weapon;
+                        $oponente->feet + $oponente->weapon;
 
             $aleatorio = rand();
 
@@ -176,7 +243,7 @@ class Avatar extends Model
             $separador = getrandmax() * $proporcion;
             $victoria = $aleatorio > $separador;
 
-            $armadura_usuario = $this->head + $this->body + $this->hands + $this->foot;
+            $armadura_usuario = $this->head + $this->body + $this->hands + $this->feet;
             // Comparamos la media de los puntos de armadura del usuario con los puntos del arma del oponente
             if($victoria){
                 $vida_restar = (abs($armadura_usuario-$oponente->weapon) > 10 ? 1

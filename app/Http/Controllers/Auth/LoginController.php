@@ -51,7 +51,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $returnLogin = $this->traitlogin($request);
-        if (isset($request->user()->id)) {
+        if (isset($request->user()->id) and ($request->user()->rol == 'alumno')) {
             $request->user()->guardarLastLogin($request);
         }
         return $returnLogin;

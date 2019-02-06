@@ -43,8 +43,6 @@
                         <span>{{ trans('adminlte_lang::message.mistareas') }}</span>   
                     </a>
                 </li>
-
-
                 <li id="sidebar_item_mistareasfinalizadas">
                     <a href="{{ url('mistareasfinalizadas') }}">
                         <i class='fa fa-clock-o'></i>
@@ -56,6 +54,14 @@
                     <a href="{{ url('usuarios') }}">
                         <i class='fa fa-group'></i>
                         <span>{{ trans('adminlte_lang::message.usuarios') }}</span>   
+                    </a>
+                </li>
+            @endif
+            @if (Auth::user()->rol != 'profesor')
+                <li id="sidebar_item_tienda">
+                    <a href="{{ route('tienda') }}">
+                        <i class='fa fa-shopping-cart'></i>
+                        <span>{{ trans('adminlte_lang::message.shop') }}</span>   
                     </a>
                 </li>
             @endif

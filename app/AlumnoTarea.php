@@ -15,7 +15,7 @@ class AlumnoTarea extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id', 'cod_tarea'];
+    protected $fillable = ['user_id', 'cod_tarea', 'completada'];
 
     /*
      * No guardamos cuando ha sido creado y/o actualizado un registro
@@ -28,6 +28,7 @@ class AlumnoTarea extends Model
     const ACTIVA = "Activa";
     const EN_PROGRESO = "En progreso";
     const FINALIZADA = "Finalizada";
+    const COMPLETADA = "Completada";
     const ERROR = "Error";
     
     /**
@@ -100,17 +101,22 @@ class AlumnoTarea extends Model
         $fechaFinTarea = Carbon::parse($this->tarea->fecha_fin, 'Europe/Madrid');        
         $ahora =  Carbon::parse('now', 'Europe/Madrid');
 
-        if ($fechaFinTarea < $ahora){
-            return AlumnoTarea::FINALIZADA;
-        }else{
-            $numTareasActivas = TiempoTarea::where('alumno_tarea_id', $this->id)->whereNull('fin')->count();
-            if ($numTareasActivas===0){
-                return AlumnoTarea::ACTIVA;
-            }elseif ($numTareasActivas===1){
-                return AlumnoTarea::EN_PROGRESO;
+        //(amondejar)
+        // Completada
+        if (!$this->completada) {
+            if ($fechaFinTarea < $ahora){
+                return AlumnoTarea::FINALIZADA;
+            }else{
+                $numTareasActivas = TiempoTarea::where('alumno_tarea_id', $this->id)->whereNull('fin')->count();
+                if ($numTareasActivas===0){
+                    return AlumnoTarea::ACTIVA;
+                }elseif ($numTareasActivas===1){
+                    return AlumnoTarea::EN_PROGRESO;
+                }
+                return AlumnoTarea::ERROR;
             }
-            return AlumnoTarea::ERROR;
-            
+        }else{
+            return Self::COMPLETADA;
         }
         
     }
@@ -238,5 +244,20 @@ class AlumnoTarea extends Model
         }
     }
 
+    /**
+     * (amondejar)
+     * Completar tarea
+     * @return 1 si se ha realizado, 0 si no se ha realizado
+     */
+    public function completar(){
+        if (($this->estado() == Self::ACTIVA) and ($this->alumno->rol == 'alumno')){
+            $this->completada = 1;
+            $this->save();
+            $sube_nivel = $this->alumno->avatar->sumarExperiencia(15);
+            $this->alumno->avatar->sumarOro(50);
+            return 1 + $sube_nivel;
+        }
+        return 0;
+    }
 
 }

@@ -5,10 +5,10 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h2 id="modal_mensaje_titulo"></h2>
+				<h3 class="modal-title" id="modal_mensaje_titulo"></h3>
 			</div>
 				<div class="modal-body">
-					<div id="modal_mensaje_texto"></div>
+					<h4 class="modal-content" id="modal_mensaje_texto"></h4>
 				</div>
 				<div class="modal-footer">
 					<div id="modal_mensaje_pie"></div>

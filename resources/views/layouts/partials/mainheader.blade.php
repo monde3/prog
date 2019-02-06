@@ -24,6 +24,13 @@
                 @if (Auth::user()->activo and Auth::user()->rol!='administrador')
                     @if (Auth::user()->rol == 'alumno')
                         <!-- Level area -->
+                        <li>
+                            <a href="{{ url('/avatar') }}" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.level') }}">
+                                    <strong id="header-lvl">
+                                        <b>{{ trans('adminlte_lang::message.level') }} {{ Auth::user()->avatar->nivelAvatar() }}</b>
+                                    </strong>
+                            </a>
+                        </li>
                         <li class="progress-li" id="progress_li">
                             <div id="progress-back" class="progress">
                                 <div id="level_bar" class="progress-bar progress-bar-success progress-bar-striped"></div>
@@ -31,19 +38,19 @@
                         </li>
                         <!-- Points area -->
                         <li>
-                            <a href="{{ url('/avatar') }}" title="{{ trans('adminlte_lang::message.experience') }}">
+                            <a href="{{ url('/avatar') }}" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.experience') }}">
                                 <i class='glyphicon glyphicon-star'></i>
                                 <strong id="header-exp">{{ Auth::user()->avatar->exp }}</strong>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url('/avatar') }}" title="{{ trans('adminlte_lang::message.life') }}">
+                            <a href="{{ url('/avatar') }}" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.life') }}">
                                 <i class='glyphicon glyphicon-heart'></i>
                                 <strong id="header-vida">{{ Auth::user()->avatar->vida }}</strong>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url('/avatar') }}" title="{{ trans('adminlte_lang::message.gold') }}">
+                            <a href="{{ url('/avatar') }}" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.gold') }}">
                                 <i class='glyphicon glyphicon-usd'></i>
                                 <strong id="header-oro">{{ Auth::user()->avatar->oro }}</strong>
                             </a>
@@ -52,7 +59,7 @@
                     <!-- Notifications Menu -->
                     <li class="dropdown notifications-menu">
                         <!-- Menu toggle button -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{{ trans('adminlte_lang::message.notifications') }}">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-placement="bottom" title="{{ trans('adminlte_lang::message.notifications') }}">
                             <i class="fa fa-bell-o"></i>
                             <span class="label label-warning">{{ Auth::user()->numNotificaciones() }}</span>
                         </a>
@@ -101,7 +108,7 @@
 
                 <li>
 
-                    <a href="{{ url('/logout') }}" title="{{ trans('adminlte_lang::message.logout') }}">
+                    <a href="{{ url('/logout') }}" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.logout') }}">
                         <i class='glyphicon glyphicon-log-out'></i>
                     </a>
                 

@@ -32,8 +32,8 @@ class Tarea extends Model
     /*
      Constantes para saber cuantos segundos deben de faltar para que una tarea entre en alerta
      */
-    const ALERTA_ROJA = 10080; //Minutos que restantes de una tarea para que esté en alerta roja
-    const ALERTA_AMARILLA = 30240; //Minutos que restantes de una tarea para que esté en alerta amarilla
+    const ALERTA_ROJA = 10080; //Minutos restantes de una tarea para que esté en alerta roja
+    const ALERTA_AMARILLA = 30240; //Minutos restantes de una tarea para que esté en alerta amarilla
     
     /**
      * Obtiene el usuario propietario de la tarea

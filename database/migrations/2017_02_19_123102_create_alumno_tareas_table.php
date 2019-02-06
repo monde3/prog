@@ -18,6 +18,7 @@ class CreateAlumnoTareasTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned()->index()->default(1);
             $table->string('cod_tarea', 10);
+            $table->boolean('completada')->comment('Indica si una tarea ha sido completada');
             
             //Primary key
             $table->unique(['user_id', 'cod_tarea']);

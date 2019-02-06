@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Avatar;
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Symphony\Component\HttpFoundation\Response;
+
+use App\Avatar;
+use App\User;
 
 class AvatarController extends Controller
 {
@@ -51,9 +54,9 @@ class AvatarController extends Controller
             }else if($valor == 'hands'){
                 $avatar->sumarHands(5);
                 $valor_avatar = $avatar->hands;
-            }else if($valor == 'foot'){
+            }else if($valor == 'feet'){
                 $avatar->sumarFoot(5);
-                $valor_avatar = $avatar->foot;
+                $valor_avatar = $avatar->feet;
             }else if($valor == 'weapon'){
                 $avatar->sumarWeapon(5);
                 $valor_avatar = $avatar->weapon;
@@ -96,12 +99,12 @@ class AvatarController extends Controller
      * @return resultado
      */
     public function lucharContra(request $request, $opponent_id) {
-        $usuario = Avatar::where('user_id', '=', $request->user()->id)->firstOrFail();
+        $avatar = Avatar::where('user_id', '=', $request->user()->id)->firstOrFail();
         $oponente = Avatar::where('user_id', '=', $opponent_id)->firstOrFail();
 
-        if ($usuario->vida >= 20 and $usuario->estado = 'activo'){
-            $victoria = $usuario->lucha($oponente);
-            $value = ($victoria ? "vic\\" : "der\\").$usuario->oro."\\".$usuario->vida;
+        if ($avatar->vida >= 20 and $avatar->estado = 'activo'){
+            $victoria = $avatar->lucha($oponente);
+            $value = ($victoria ? "vic\\" : "der\\").$avatar->oro."\\".$avatar->vida;
         } else  {
             $value = "err\\Solo puedes luchar en estado ACTIVO y con 20 puntos de vida o más.";
         }
@@ -119,11 +122,16 @@ class AvatarController extends Controller
         $avatar = Avatar::where('user_id', '=', $avatar_user_id)->firstOrFail();
         if($avatar->vida >= 20 and $estado != 'herido'){
             $avatar->cambiarEstado($estado);
-            $value = "ok\\".$estado."\\".$avatar->rutaImagen();
+            $value = "ok\\".$estado."\\".route('imagenAvatar', ['user_id' => $avatar->user_id]);
         }else{
-            $value = "err\\No tiene vida suficiente para luchar.";
+            $value = "err\\".trans('adminlte_lang::message.notenaughlifestate');
         }
         return $value;
     }
-    
+
+    public function imagenAvatar(request $request, $user_id, $parte){
+        $avatar = User::find($user_id)->avatar;
+        $file = Storage::disk('images')->get($avatar->imagePath($parte));
+        return Response($file, 200);
+    }
 }

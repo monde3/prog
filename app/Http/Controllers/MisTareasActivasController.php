@@ -130,7 +130,7 @@ class MisTareasActivasController extends Controller {
                 $value = 'OK/'.$avatar->vida;
             }
             else{
-                $value = 'ERROR/Tarea finalizada';
+                $value = 'ERR/'.trans('adminlte_lang::message.tareafinalizada');
             }
         // POMODORO->DESCANSO
         // Guardamos inicio de descanso

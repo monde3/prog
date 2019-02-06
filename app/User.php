@@ -25,6 +25,11 @@ class User extends Authenticatable
         'dni', 'nombre', 'apellidos', 'email', 'password', 'rol', 'activo', 'last_login'
     ];
 
+    /*
+     (amondejar)
+     */
+    const DIAS_SIN_ACCEDER = 5; //Días sin acceder para que se resten puntos de exp
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -160,24 +165,27 @@ class User extends Authenticatable
     // En variable de sesión de tipo FLASH indicamos que
     // hay que mostrar modal y sumar exp
     public function guardarLastLogin(Request $request){
-        // Si es el primer login del día guardamos la fecha y otorgamos 5 exp (amondejar)
-        $avatar = Avatar::where('user_id', $this->id)->get()->first();
-        $dateLastLogin = Carbon::parse(Carbon::parse($this->last_login)->toDateString());
-        $today = Carbon::today();
+        if ($request->user()->rol == 'alumno'){
+            // Si es el primer login del día guardamos la fecha y otorgamos 5 exp (amondejar)
+            $avatar = Avatar::where('user_id', $this->id)->get()->first();
+            $dateLastLogin = Carbon::parse(Carbon::parse($this->last_login)->toDateString());
+            $today = Carbon::today();
 
-        $mostrarModal = $dateLastLogin->diffInDays($today);
-        // Guardamos en variable de sesión flash
-        $request->session()->put('mostrarModalFirstLogin', $mostrarModal);
+            $mostrarModal = $dateLastLogin->diffInDays($today);
+            // Guardamos en variable de sesión flash
+            $request->session()->put('mostrarModalFirstLogin', $mostrarModal);
 
-        if ($mostrarModal >= 1){
-            $this->last_login = Carbon::today();
-            $this->save();
-            if ($mostrarModal == 1){
-                $avatar->sumarExperiencia(5);
+            if ($mostrarModal >= 1){
+                $this->last_login = Carbon::today();
+                $this->save();
+                if ($mostrarModal == 1){
+                    $avatar->sumarExperiencia(5);
+                }
+                else if ($mostrarModal > Self::DIAS_SIN_ACCEDER){
+                    $avatar->restarExperiencia(2);
+                }
             }
-            else if ($mostrarModal > 1){
-                $avatar->restarExperiencia(2);
-            }
+
         }
     }
 
@@ -192,10 +200,19 @@ class User extends Authenticatable
             if ($mostrarModal == 1){
                 return 1;
             }
-            else if ($mostrarModal > 1){
+            else if ($mostrarModal > Self::DIAS_SIN_ACCEDER){
                 return -1;
             }
         }
         return 0;
+    }
+
+
+    // (amondejar)
+    // Puntos que hemos conseguido en el nivel actual
+    public function porcentajeNivel(){
+        if ($this->rol == 'alumno'){
+            return $this->avatar->porcentajeNivel();
+        }
     }
 }

@@ -123,7 +123,7 @@ class RegisterController extends Controller
                 'head' => 0,
                 'body' => 0,
                 'hands' => 0,
-                'foot' => 0,
+                'feet' => 0,
                 'weapon' => 0,
                 'estado' => 'activo',
             ]);

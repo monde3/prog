@@ -27,4 +27,24 @@ class TareaAlumnoController extends Controller
         
         return view('tarea', compact('tarea'));
     }
+
+    /**(amondejar)
+     * Marca una tarea como completada si su estado es ACTIVA
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int $alumno_tarea_id
+     * @return \Illuminate\Http\Response
+     */
+    public function completarTarea(Request $request, $alumno_tarea_id)
+    {
+        $tarea = AlumnoTarea::find($alumno_tarea_id);
+        $exito = 0;
+
+        if (isset($tarea) and ($tarea->estado() == AlumnoTarea::ACTIVA))
+        {
+            $exito = $tarea->completar();
+        }
+        return view('tarea', compact('tarea', 'exito'));
+    }
+
 }

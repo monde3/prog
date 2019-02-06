@@ -131,6 +131,8 @@
 				                    	<span class="label label-success">{{ trans('adminlte_lang::message.enprogreso') }}</span>
 				                    @elseif ($tarea->estado() === \App\AlumnoTarea::FINALIZADA)
 				                    	<span class="label label-default">{{ trans('adminlte_lang::message.finalizada') }}</span>
+				                    @elseif ($tarea->estado() === \App\AlumnoTarea::COMPLETADA)
+				                    	<span class="label label-success">{{ trans('adminlte_lang::message.completada') }}</span>
 				                    @elseif ($tarea->estado() === \App\AlumnoTarea::ERROR)
 				                    	<span class="label label-danger">{{ trans('adminlte_lang::message.error') }}</span>
 				                    @endif

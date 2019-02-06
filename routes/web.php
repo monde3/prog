@@ -79,7 +79,6 @@ Route::get('graficaprofesor/{cod_tarea}', [
     'uses' => 'GraficaProfesorController@index'
 ]);
 
-
 Route::get('calendario', function () {
     return view('calendario');
 });
@@ -95,7 +94,6 @@ Route::get('cronometrotiempo/{tiempo_tarea_id}', [
     'uses' => 'TiempoTareaController@tiempo'
 ]);
 
-
 Route::get('tiempoAlumnoTarea/{dni}/{cod_tarea}', [
     'as' => 'tiempoAlumnoTarea',
     'middleware' => 'auth',
@@ -109,8 +107,10 @@ Route::get('crearTiempo/{id}', [
 ]);
 
 
-//[amondejar]
-// Rutaa para la gestión de pomodoros
+
+// [amondejar]
+// GAMIFICACIÓN //
+
 Route::get('gestionPomodoro/{alumno_tarea_id}/{fase_actual}', [
     'as' => 'gestionPomodoro',
     'middleware' => 'auth',
@@ -147,12 +147,67 @@ Route::get('cambiarEstadoAvatar/{avatar_user_id}/{estado}', [
     'uses' => 'AvatarController@cambiarEstadoAvatar'
 ]);
 
+Route::get('imagenAvatar/{user_id}/{parte}', [
+    'as' => 'imagenAvatar',
+    'middleware' => 'auth',
+    'uses' => 'AvatarController@imagenAvatar'
+]);
+
 Route::get('mostrarModalFirstLogin', [
     'as' => 'mostrarModalFirstLogin',
     'middleware' => 'auth',
     'uses' => 'UserController@mostrarModalFirstLogin'
 ]);
+
+Route::get('completarTarea/{alumno_tarea_id}', [
+    'as' => 'completarTarea',
+    'middleware' => 'auth',
+    'uses' => 'TareaAlumnoController@completarTarea'
+]);
+
+Route::get('tienda', [
+    'as' => 'tienda',
+    'middleware' => 'auth',
+    'uses' => 'TiendaController@index'
+]);
+
+Route::post('subirImagenAvatar', [
+    'as' => 'subirImagenAvatar',
+    'middleware' => 'auth',
+    'uses' => 'TiendaController@subirImagenAvatar'
+]);
+
+Route::get('eliminarImagen/{imagen_id}', [
+    'as' => 'eliminarImagen',
+    'middleware' => 'auth',
+    'uses' => 'TiendaController@eliminarImagen'
+]);
+
+Route::get('getImage/{filename}', [
+    'as' => 'getImage',
+    'middleware' => 'auth',
+    'uses' => 'TiendaController@getImage'
+]);
+
+Route::get('comprarImagen/{imagen_id}', [
+    'as' => 'comprarImagen',
+    'middleware' => 'auth',
+    'uses' => 'TiendaController@comprarImagen'
+]);
+
+Route::get('editarImagenAvatar', [
+    'as' => 'editarImagenAvatar',
+    'middleware' => 'auth',
+    'uses' => 'AvatarImagenController@index'
+]);
+
+Route::get('cambiarImagenAvatar/{imagen_id}/{estado}', [
+    'as' => 'cambiarImagenAvatar',
+    'middleware' => 'auth',
+    'uses' => 'AvatarImagenController@cambiarImagenAvatar'
+]);
 //[amondejar]
+
 
 
 Route::post('crearTarea', 'ServiciosController@crearTarea');

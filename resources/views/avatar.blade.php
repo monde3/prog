@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('htmlheader_title')
-	Inicio
+	{{ trans('adminlte_lang::message.avatar') }}
 @endsection
 
 @section('contentheader_title')
@@ -14,10 +14,12 @@
 				<div class="col-md-10 col-md-offset-1">
 					<div class="box box-solid box-primary">
 						<div class="box-header with-border">
-							<h3 class="box-title"><b>Home</b></h3>						
+							<h3 class="box-title">
+								<b>{{ trans('adminlte_lang::message.avatar') }}</b>
+							</h3>
 						</div>
 						<div class="box-body">
-							{{ trans('adminlte_lang::message.welcomeadmin') }}							
+							{{ trans('adminlte_lang::message.noavatarrol') }}							
 						</div>
 					</div>
 				</div>
@@ -26,127 +28,128 @@
 
 	@else
 		<div class="container-fluid spark-screen">
-
-			<div class="row">
-				<div class="box box-solid box-primary">
-					<div class="box-header with-border">
-						<h3 class="box-title"><b>Variables de DEBUG</b></h3>	
-					</div>
-					<div class="box-body">
-						<b>$porcentaje = {{ Auth::user()->avatar->porcentajeNivel() }}</b>
-					</div>
-				</div>
-			</div>
 			<!--INFORMACION DEL AVATAR-->
-			<div id="avatar_user_id" style="display:none;">{{ $avatar->user_id }}</div>
 			<div class="row">
 				<div class="box box-solid box-primary">
 					<div class="box-header with-border">
 						<h3 class="box-title">
 							<b>Avatar</b>
-						</h3>						
+						</h3>					
 					</div>
 					<div class="box-body">
 						<div class="col-sm-3">
 							<div class="item active">
-								<img id="avatar_img" class="img-responsive img-rounded" src="{{ $avatar->rutaImagen() }}" alt="alt">
+								<a href="{{ route('editarImagenAvatar') }}" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.editimage') }}">
+									<img id="avatar_img" class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'avatar']) }}" alt="alt">
+								</a>
 							</div>
 						</div>
-						<div class="col-sm-4">
+						<div class="col-sm-3">
 							<div class="row row-margin-bottom">
 								<div class="col-sm-4">
+								@if($avatar->img_head!=0)
+									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'head']) }}" alt="" data-toggle="tooltip" data-placement="left" title="{{ trans('adminlte_lang::message.head') }}">
+								@else
 									<p class="text-primary text-big">
 										<b>{{ trans('adminlte_lang::message.head') }}</b>
 									</p>
+								@endif
 								</div>
-								<div class="col-sm-2">
+								<div class="col-sm-2 vcenter">
 									<p id="head_value" class="text-primary text-big">
 										<b>{{ $avatar->head }}</b>
 									</p>
 								</div>
-								<div class="col-sm-2">
-									<button id="btn_head" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)">
+								<div class="col-sm-2 vcenter">
+									<button id="btn_head" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="top" title="{{ trans('adminlte_lang::message.improve') }}">
 										<i class="glyphicon glyphicon-plus"></i>
 									</button>
 								</div>
 							</div>
 							<div class="row row-margin-bottom">
 								<div class="col-sm-4">
+								@if($avatar->img_body!=0)
+									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'body']) }}" alt="" data-toggle="tooltip" data-placement="left" title="{{ trans('adminlte_lang::message.body') }}">
+								@else
 									<p class="text-primary text-big">
 										<b>{{ trans('adminlte_lang::message.body') }}</b>
 									</p>
+								@endif
 								</div>
-								<div class="col-sm-2">
+								<div class="col-sm-2 vcenter">
 									<p id="body_value" class="text-primary text-big">
 										<b>{{ $avatar->body }}</b>
 									</p>
 								</div>
-								<div class="col-sm-2">
-									<button id="btn_body" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)">
+								<div class="col-sm-2 vcenter">
+									<button id="btn_body" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="top" title="{{ trans('adminlte_lang::message.improve') }}">
 										<i class="glyphicon glyphicon-plus"></i>
 									</button>
 								</div>
 							</div>
 							<div class="row row-margin-bottom">
 								<div class="col-sm-4">
+								@if($avatar->img_hands!=0)
+									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'hands']) }}" alt="" data-toggle="tooltip" data-placement="left" title="{{ trans('adminlte_lang::message.hands') }}">
+								@else
 									<p class="text-primary text-big">
 										<b>{{ trans('adminlte_lang::message.hands') }}</b>
 									</p>
+								@endif
 								</div>
-								<div class="col-sm-2">
+								<div class="col-sm-2 vcenter">
 									<p id="hands_value" class="text-primary text-big">
 										<b>{{ $avatar->hands }}</b>
 									</p>
 								</div>
-								<div class="col-sm-2">
-									<button id="btn_hands" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)">
+								<div class="col-sm-2 vcenter">
+									<button id="btn_hands" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="top" title="{{ trans('adminlte_lang::message.improve') }}">
 										<i class="glyphicon glyphicon-plus"></i>
 									</button>
 								</div>
 							</div>
 							<div class="row row-margin-bottom">
 								<div class="col-sm-4">
+								@if($avatar->img_feet!=0)
+									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'feet']) }}" alt="" data-toggle="tooltip" data-placement="left" title="{{ trans('adminlte_lang::message.feet') }}">
+								@else
 									<p class="text-primary text-big">
 										<b>{{ trans('adminlte_lang::message.feet') }}</b>
 									</p>
+								@endif
 								</div>
-								<div class="col-sm-2">
-									<p id="foot_value" class="text-primary text-big">
-										<b>{{ $avatar->foot }}</b>
+								<div class="col-sm-2 vcenter">
+									<p id="hands_value" class="text-primary text-big">
+										<b>{{ $avatar->feet }}</b>
 									</p>
 								</div>
-								<div class="col-sm-2">
-									<button id="btn_foot" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)">
+								<div class="col-sm-2 vcenter">
+									<button id="btn_foot" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="top" title="{{ trans('adminlte_lang::message.improve') }}">
 										<i class="glyphicon glyphicon-plus"></i>
 									</button>
 								</div>
 							</div>
 							<div class="row row-margin-bottom">
 								<div class="col-sm-4">
+								@if($avatar->img_weapon!=0)
+									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'weapon']) }}" alt="" data-toggle="tooltip" data-placement="left" title="{{ trans('adminlte_lang::message.weapon') }}">
+								@else
 									<p class="text-primary text-big">
 										<b>{{ trans('adminlte_lang::message.weapon') }}</b>
 									</p>
+								@endif
 								</div>
-								<div class="col-sm-2">
+								<div class="col-sm-2 vcenter">
 									<p id="weapon_value" class="text-primary text-big">
 										<b>{{ $avatar->weapon }}</b>
 									</p>
 								</div>
-								<div class="col-sm-2">
-									<button id="btn_weapon" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)">
+								<div class="col-sm-2 vcenter">
+									<button id="btn_weapon" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="top" title="{{ trans('adminlte_lang::message.improve') }}">
 										<i class="glyphicon glyphicon-plus"></i>
 									</button>
 								</div>
 							</div>
-						</div>
-						<div class="col-sm-1">
-							<p class="text-primary text-big">
-								<b>Nivel</b>
-							</p>
-							<p class="text-primary text-center" style="font-size: 3em">
-								<b>{{ $nivelAvatar }}</b>
-							</p>
-
 						</div>
 						<div class="col-sm-2">
 					    @if($avatar->estado == 'herido')
@@ -156,21 +159,21 @@
 					    @endif
 						    
 						    @if($avatar->estado == 'activo')
-						    	<option value="activo" selected>ACTIVO</option>
+						    	<option value="activo" selected>{{ trans('adminlte_lang::message.active') }}</option>
 						    @else
-						    	<option value="activo">ACTIVO</option>
+						    	<option value="activo">{{ trans('adminlte_lang::message.active') }}</option>
 						    @endif
 						    
 						    @if($avatar->estado == 'inactivo')
-						    	<option value="inactivo" selected>INACTIVO</option>
+						    	<option value="inactivo" selected>{{ trans('adminlte_lang::message.inactive') }}</option>
 						    @else
-						    	<option value="inactivo">INACTIVO</option>
+						    	<option value="inactivo">{{ trans('adminlte_lang::message.inactive') }}</option>
 						    @endif
 						    
 						    @if($avatar->estado == 'herido')
-						    	<option value="herido" disabled selected>HERIDO</option>
+						    	<option value="herido" disabled selected>{{ trans('adminlte_lang::message.hurt') }}</option>
 						    @else
-						    	<option value="herido" disabled>HERIDO</option>
+						    	<option value="herido" disabled>{{ trans('adminlte_lang::message.hurt') }}</option>
 						    @endif
 							</select>
 
@@ -179,7 +182,7 @@
 						    @else
 		                	<a id="btn_luchar" class="btn btn-block btn-danger disabled" href="{{ route('luchar') }}">
 						    @endif
-			                	<b>Luchar</b>
+			                	<b>{{ trans('adminlte_lang::message.fight') }}</b>
 			                </a>
 						</div>
 					</div>
@@ -200,9 +203,8 @@
     	<script type="text/javascript">
 
     		$('select').on('change', function() {
-                var avatar_user_id = $("#avatar_user_id").text().trim();
 			  	var url_estado = "{{ url ('cambiarEstadoAvatar') }}"
-								.concat("/").concat(avatar_user_id)
+								.concat("/").concat({{ $avatar->user_id }})
 								.concat("/").concat(this.value);
 				$.ajax({
 				  type: "GET",
@@ -216,7 +218,10 @@
 						$("#modal_mensaje").show();
 					}
 					else{
-            			$("#avatar_img").attr("src", resp[2]);
+						// El navegador cachea la imagen y no cambia si no
+						// forzamos que recargue la imagen
+						d = new Date();
+            			$("#avatar_img").attr("src", resp[2]+"?"+d.getTime());
 
             			if(resp[1] == 'inactivo'){
             				$("#btn_luchar").addClass('disabled');
@@ -231,9 +236,8 @@
     		function aumentar_nivel(clicked_id){
     			var valor = get_valor(clicked_id);
 
-                var avatar_user_id = $("#avatar_user_id").text().trim();
                 var url_tarea = "{{ url ('aumentarNivelAvatar') }}"
-                                .concat("/").concat(avatar_user_id)
+                                .concat("/").concat({{ $avatar->user_id }})
                                 .concat("/").concat(valor);
 				$.ajax({
 				  type: "GET",
