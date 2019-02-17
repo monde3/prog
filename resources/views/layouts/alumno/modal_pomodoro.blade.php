@@ -8,7 +8,7 @@
         <h3 class="modal-title">{{ trans('adminlte_lang::message.timemanaging') }}</h3>
       </div>
       <div class="modal-body">
-        <h4 id="h1-fase" align="center">{{ trans('adminlte_lang::message.timer')}}</h4>
+        <h3 id="h1-fase" align="center">{{ trans('adminlte_lang::message.timer')}}</h3>
         <div id="timer">
             <div class="container" id="cronometro-pomodoro">
                 <div id="hour">00</div>
@@ -40,9 +40,9 @@
           const DESCANSO = 2;
           const PRE_POMODORO = 3;
 
-          const TIEMPO_POMODORO = 5;
-          const TIEMPO_DESCANSO = 5;
-          const TIEMPO_INTERACCION = 5;
+          const TIEMPO_POMODORO = 1500; // 25 minutos
+          const TIEMPO_DESCANSO = 300; // 5 minutos
+          const TIEMPO_INTERACCION = 30;
 
           var tiempo = {
               hora: 0,
@@ -116,7 +116,7 @@
                   gestion_intervalo();
               }
               location.reload();
-          }
+          })
 
           function gestion_intervalo(){
               var alumno_tarea_id = $("#alumno_tarea_id").text().trim();
@@ -195,7 +195,7 @@
 
           function phase_over(button_text){
               boton.text(button_text);
-              titulo.text('Interactuar ' + (Math.round(tiempo.fase/2) + 1));
+              titulo.text(button_text);
               reset_clock();
               tiempo.fase++;
               audio_ding.play();

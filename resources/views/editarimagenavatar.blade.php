@@ -31,39 +31,44 @@
 		<div class="row">
 			<div class="col-md-9">
 				<div class="gallery-row">
-				@foreach($imagenes_compradas as $avatar_imagen)
-						<div class="gallery-column">
-							<div class="gallery-img">
-								@if(!in_array($avatar_imagen->imagen->id, $imagenes_seleccionadas))
-									@if($avatar_imagen->imagen->parte == 'avatar')
-									<a href="javascript:void(0);" onclick="showModal({{$avatar_imagen->imagen->id}});">
-									@else
-									<a href="{{ route('cambiarImagenAvatar', array(
-												'imagen_id' => $avatar_imagen->imagen->id,
-												'estado' => '-'
-												)) }}">
-									@endif
+				@if($imagenes_compradas->count() == 0)
+						{{ trans('adminlte_lang::message.noskinsbought') }}
+				@else
+					@foreach($imagenes_compradas as $avatar_imagen)
+					<div class="gallery-column">
+						<div class="gallery-img">
+							@if(!in_array($avatar_imagen->imagen->id, $imagenes_seleccionadas))
+								@if($avatar_imagen->imagen->parte == 'avatar')
+								<a href="javascript:void(0);" onclick="showModal({{$avatar_imagen->imagen->id}});">
+								@else
+								<a href="{{ route('cambiarImagenAvatar', array(
+											'imagen_id' => $avatar_imagen->imagen->id,
+											'estado' => '-'
+											)) }}">
 								@endif
-									<img class="img-responsive" src="{{ route('getImage', ['filename' => $avatar_imagen->imagen->filename]) }}">
-									<div class="text-center">
-										<b>{{ trans('adminlte_lang::message.'.$avatar_imagen->imagen->parte) }}</b>
-									</div>
-									<div class="text-center">
-									@if(!in_array($avatar_imagen->imagen->id, $imagenes_seleccionadas))
-										<b>{{ trans('adminlte_lang::message.select') }}</b>
-									@else
-										<b>{{ trans('adminlte_lang::message.selected') }}</b>
-									@endif
-									</div>
+							@endif
+								<img class="img-responsive" src="{{ route('getImage', ['filename' => $avatar_imagen->imagen->filename]) }}">
+								<div class="text-center">
+									<b>{{ trans('adminlte_lang::message.'.$avatar_imagen->imagen->parte) }}</b>
+								</div>
+								<div class="text-center">
 								@if(!in_array($avatar_imagen->imagen->id, $imagenes_seleccionadas))
-								</a>
+									<b>{{ trans('adminlte_lang::message.select') }}</b>
+								@else
+									<b>{{ trans('adminlte_lang::message.selected') }}</b>
 								@endif
-							</div>
+								</div>
+							@if(!in_array($avatar_imagen->imagen->id, $imagenes_seleccionadas))
+							</a>
+							@endif
 						</div>
-				@endforeach
+					</div>
+					@endforeach
+				@endif
 				</div>
 			</div>
 		</div>
+		{{ $imagenes_compradas->links() }}
 	</div>
 	<!--MODAL PARA PREGUNTAR POR EL ESTADO AL QUE ASIGNARLE LA IMAGEN-->
 	<!--<div class="modal fade" tabindex="-1" role="dialog" id="modal_pomodoro">-->

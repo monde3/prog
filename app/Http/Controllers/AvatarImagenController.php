@@ -26,7 +26,6 @@ class AvatarImagenController extends Controller
 				$request->user()->avatar->img_hands,
                 $request->user()->avatar->img_feet,
 				$request->user()->avatar->img_weapon);
-    		//return var_dump($imagenes_compradas);
     		return view('editarimagenavatar', compact('imagenes_compradas', 'imagenes_seleccionadas'));
     	}else{
    			return redirect('/home')->with(array('error' => trans('adminlte_lang::message.errornotalumn')));

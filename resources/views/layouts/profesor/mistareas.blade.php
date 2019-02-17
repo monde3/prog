@@ -32,7 +32,7 @@
         </td>
         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
           <a class="btn btn-block btn-info" href="{{ route('tareaprofesor', ['cod_tarea' => $tarea->cod_tarea]) }}">
-            Ver
+            {{ trans('adminlte_lang::message.see') }}
           </a>
         </td>
 	  	</tr>

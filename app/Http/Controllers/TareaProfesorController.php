@@ -20,7 +20,8 @@ class TareaProfesorController extends Controller
             abort(403);
         }
         
-        $tarea = Tarea::find(str_pad($cod_tarea, 10, "0", STR_PAD_LEFT));
+        //$tarea = Tarea::find(str_pad($cod_tarea, 10, "0", STR_PAD_LEFT));
+        $tarea = Tarea::find($cod_tarea);
         
         return view('tarea', compact('tarea'));
     }

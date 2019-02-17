@@ -76,13 +76,16 @@ class AvatarController extends Controller
      * que estén en el mismo nivel
      *
      * @param
-     * @return collection - usuarios
+     * @return collection - avatares
      */
     public function luchar(request $request) {
-        $usuario = Avatar::where('user_id', '=', $request->user()->id)->firstOrFail();
+        $avatar_usuario = Avatar::where('user_id', '=', $request->user()->id)->firstOrFail();
 
-        $avatares = Avatar::where('estado', '=', 'activo')->where('user_id', '!=', $request->user()->id)->where(DB::raw('exp DIV '.Avatar::PUNTOS_POR_NIVEL), '=', floor($usuario->exp/Avatar::PUNTOS_POR_NIVEL))->get();
-        
+        $avatares = Avatar::where('estado', '=', 'activo')
+                    ->where('user_id', '!=', $request->user()->id)
+                    ->where(DB::raw('exp DIV '.Avatar::PUNTOS_POR_NIVEL), '=', floor($avatar_usuario->exp/Avatar::PUNTOS_POR_NIVEL))
+                    ->get();
+                    
         return view('luchar', compact('avatares'));
     }
 
@@ -96,17 +99,22 @@ class AvatarController extends Controller
      * si sale un número de tu rango, has ganado
      *
      * @param $opponent_id - ID del jugador contra el que se lucha
-     * @return resultado
+     * @return resultado - cadena:
+     *            victoria/derrota
+     *            oro resultante
+     *            vida resultante
+     *            vida perdida
      */
     public function lucharContra(request $request, $opponent_id) {
         $avatar = Avatar::where('user_id', '=', $request->user()->id)->firstOrFail();
         $oponente = Avatar::where('user_id', '=', $opponent_id)->firstOrFail();
 
         if ($avatar->vida >= 20 and $avatar->estado = 'activo'){
+            $vida_antes = $avatar->vida;
             $victoria = $avatar->lucha($oponente);
-            $value = ($victoria ? "vic\\" : "der\\").$avatar->oro."\\".$avatar->vida;
+            $value = ($victoria ? "vic\\" : "der\\").$avatar->oro."\\".$avatar->vida."\\".$vida_antes-$avatar->vida;
         } else  {
-            $value = "err\\Solo puedes luchar en estado ACTIVO y con 20 puntos de vida o más.";
+            $value = "err\\".trans('adminlte_lang::message.fighterror');
         }
         
         return $value;
@@ -122,7 +130,7 @@ class AvatarController extends Controller
         $avatar = Avatar::where('user_id', '=', $avatar_user_id)->firstOrFail();
         if($avatar->vida >= 20 and $estado != 'herido'){
             $avatar->cambiarEstado($estado);
-            $value = "ok\\".$estado."\\".route('imagenAvatar', ['user_id' => $avatar->user_id]);
+            $value = "ok\\".$estado."\\".route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'avatar']);
         }else{
             $value = "err\\".trans('adminlte_lang::message.notenaughlifestate');
         }

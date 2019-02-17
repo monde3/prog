@@ -50,31 +50,6 @@ class MisTareasActivasController extends Controller {
     }
 
     /**
-     * Start/Stop del cronómetro de la tarea de un alumno
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $alumno_tarea_id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(request $request, $alumno_tarea_id) {
-        //
-        $miTarea = AlumnoTarea::find($alumno_tarea_id);
-
-        if ($miTarea->user_id != $request->user()->id or ! $miTarea->alumno->activo) {
-            abort(403);
-        }
-
-        $estado = $miTarea->estado();
-        if ($estado === AlumnoTarea::ACTIVA) {
-            $miTarea->iniciar();
-        } else {
-            $miTarea->parar();
-        }
-        
-        return Redirect::back();
-    }
-
-    /**
      * Devuelve el tiempo de un alumno en una tarea formateado
      *
      * @param  int  $alumno_tarea_id

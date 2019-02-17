@@ -47,9 +47,6 @@
 											</div>
 										</td>
 										<td class="col-md-1 col-lg-1">
-											{{ $avatar->user_id }}
-										</td>
-										<td class="col-md-1 col-lg-1">
 											{{ $avatar->alumno->nombre }} {{ $avatar->alumno->apellidos }}
 										</td>
 										<td class="hidden-xs hidden-sm col-md-1 col-lg-1">
@@ -97,14 +94,14 @@
 						$("#modal_mensaje").show();
 					}else{
 						if(resp[0]=="vic"){
-							$("#modal_mensaje_titulo").text("VICTORIA");
-							$("#modal_mensaje_texto").text("¡Enhorabuena, has ganado!");
-              				$("#modal_mensaje_pie").text("+{{ \App\Avatar::ORO_VICTORIA }} ORO");
+							$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.congrats') }}");
+							$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.youwin') }}");
+              				$("#modal_mensaje_pie").text("+{{ \App\Avatar::ORO_VICTORIA }} {{ trans('adminlte_lang::message.gold') }}");
 							$("#modal_mensaje").show();
 						}else if(resp[0]=="der"){
-							$("#modal_mensaje_titulo").text("DERROTA");
-							$("#modal_mensaje_texto").text("Lástima, perdiste.");
-              				$("#modal_mensaje_pie").text("");
+							$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.pity') }}");
+							$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.youlose') }}");
+              				$("#modal_mensaje_pie").text("-".concat(resp[3]).concat("{{ trans('adminlte_lang::message.life') }}"));
 							$("#modal_mensaje").show();
 						}
 						$("#header-oro").text(resp[1]);

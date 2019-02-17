@@ -13,24 +13,12 @@
 				</div>				
 			</div>
 		</div>
-		<!-- CONTROL DEL TIEMPO NORMAL -->
-		<div class="col-md-3">
-			@if ($tarea->estado() === \App\AlumnoTarea::ACTIVA)
-            	<a id="boton" class="btn btn-block btn-success btn-lg" href="{{ route('mistareasactivas.edit', ['alumno_tarea_id' => $tarea->id]) }}">
-					Iniciar
-            	</a>
-            @elseif ($tarea->estado() === \App\AlumnoTarea::EN_PROGRESO)
-	            <a id="boton" class="btn btn-block btn-danger btn-lg" href="{{ route('mistareasactivas.edit', ['alumno_tarea_id' => $tarea->id]) }}">
-	            	Parar
-	            </a>       
-            @endif 
-		</div>
 		<!-- (amondejar) CONTROL DEL TIEMPO MEDIANTE POMODOROS -->
-		<div class="col-md-3">
+		<div class="col-md-7">
 			@if ($tarea->estado() === \App\AlumnoTarea::ACTIVA)
-              	<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modal_pomodoro">
+              	<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#modal_pomodoro">
 					<span class="glyphicon glyphicon-star" aria-hidden="true">&nbsp;</span>
-					Iniciar Pomodoro
+					Iniciar
 				</button>
             @elseif ($tarea->estado() === \App\AlumnoTarea::FINALIZADA)
               	<button type="button" class="btn btn-danger btn-lg" disabled="true">
@@ -38,7 +26,7 @@
 					Tarea finalizada
 				</button>
             @elseif ($tarea->estado() === \App\AlumnoTarea::COMPLETADA)
-              	<button type="button" class="btn btn-success btn-lg" disabled="true">
+              	<button type="button" class="btn btn-secondary btn-lg" disabled="true">
 					<span class="glyphicon glyphicon-star" aria-hidden="true">&nbsp;</span>
 					Tarea completada
 				</button>
