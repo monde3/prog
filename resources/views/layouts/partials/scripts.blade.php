@@ -47,6 +47,9 @@
       else if (url_actual.search("tienda") > 0){
           sideBarItem = $("#sidebar_item_tienda");
       }
+      else if (url_actual.search("avatar") > 0){
+          sideBarItem = $("#sidebar_item_avatar");
+      }
       sideBarItem.addClass('active');
 
       // Modal de primer login en plantilla app.blade.php

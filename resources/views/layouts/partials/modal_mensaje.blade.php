@@ -5,10 +5,15 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h3 class="modal-title" id="modal_mensaje_titulo"></h3>
+						<h3 class="modal-title" id="modal_mensaje_titulo"></h3>
 			</div>
 				<div class="modal-body">
 					<h4 class="modal-content" id="modal_mensaje_texto"></h4>
+					<div class="row">
+						<div class="col-md-2">
+							<img id="modal_mensaje_imagen" class="img-responsive img-rounded" hidden>
+						</div>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<div id="modal_mensaje_pie"></div>
@@ -22,6 +27,6 @@
 	<script>
 		function modalToggle(){
 			$("#modal_mensaje").modal('toggle');
-		}
+		};
   	</script>
 @endsection

@@ -49,6 +49,14 @@
                         <span>{{ trans('adminlte_lang::message.mistareasfinalizadas') }}</span>   
                     </a>
                 </li>
+                @if (Auth::user()->rol == 'alumno')
+                <li id="sidebar_item_avatar">
+                    <a href="{{ url('avatar') }}">
+                        <i class='fa fa-user-ninja'></i>
+                        <span>{{ trans('adminlte_lang::message.avatar') }}</span>   
+                    </a>
+                </li>
+                @endif
             @elseif (Auth::user()->activo and Auth::user()->rol == 'administrador')
                 <li id="sidebar_item_usuarios">
                     <a href="{{ url('usuarios') }}">

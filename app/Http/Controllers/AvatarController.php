@@ -112,7 +112,7 @@ class AvatarController extends Controller
         if ($avatar->vida >= 20 and $avatar->estado = 'activo'){
             $vida_antes = $avatar->vida;
             $victoria = $avatar->lucha($oponente);
-            $value = ($victoria ? "vic\\" : "der\\").$avatar->oro."\\".$avatar->vida."\\".$vida_antes-$avatar->vida;
+            $value = ($victoria ? "vic\\" : "der\\").$avatar->oro."\\".$avatar->vida."\\".($vida_antes-$avatar->vida);
         } else  {
             $value = "err\\".trans('adminlte_lang::message.fighterror');
         }

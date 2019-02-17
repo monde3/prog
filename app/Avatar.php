@@ -253,7 +253,7 @@ class Avatar extends Model
                 $vida_restar = (abs($armadura_usuario-$oponente->weapon) > 10 ? 4
                                  : ($armadura_usuario<$oponente->weapon ? 3 : 5));
             }
-            $this->restarVida($vida_restar * 5);
+            $this->restarVida($vida_restar * 2);
         }
         else{
             $victoria = false;
