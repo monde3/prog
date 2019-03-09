@@ -5,7 +5,7 @@
         <small>@yield('contentheader_description')</small>
     </h1>
     <ol class="breadcrumb">
-    	<li><a href="{{ url('home') }}"><i class="fa fa-dashboard"></i> {{ trans('adminlte_lang::message.home') }}</a></li>
+    	<li><a href="{{ url('home') }}"><i class="fa fa-home"></i> {{ trans('adminlte_lang::message.home') }}</a></li>
     	@yield('contentheader_breadcrumb')
     </ol>
 </section>

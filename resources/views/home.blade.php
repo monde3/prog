@@ -9,7 +9,7 @@
 
 @section('main-content')
 	@if (Auth::user()->activo and Auth::user()->rol == 'administrador')
-		<div class="container spark-screen">
+		<div class="container-fluid spark-screen">
 			<div class="row">
 				<div class="col-md-10 col-md-offset-1">
 					<div class="box box-solid box-primary">
@@ -25,20 +25,9 @@
 		</div>
 
 	@else
-		<div class="container spark-screen">
+		<div class="container-fluid spark-screen">
 			<div class="row">
 				<div class="col-md-4 col-md-offset-1">
-					<div class="row">
-						<div class="box box-solid box-primary">
-							<div class="box-header with-border">
-								<h3 class="box-title"><b>Variables de DEBUG</b></h3>	
-							</div>
-							<div class="box-body">
-								<b>Valor</b>
-								<p>{{ asset('images/avatar2.png') }}</p>
-							</div>
-						</div>
-					</div>
 					<!--INFORMACION DEL AVATAR-->
 					@if (Auth::user()->rol == 'alumno')
 					<div class="row">
@@ -48,8 +37,8 @@
 							</div>
 							<div class="box-body">
 								<div class="col-md-5">
-									<div class="item active">
-										<a href="{{ url('/avatar') }}">
+									<div class="hovereffect">
+										<a href="{{ url('/avatar') }}" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.avatar') }}">
 											<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'avatar']) }}" alt="">
 										</a>
 									</div>

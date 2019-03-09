@@ -54,7 +54,7 @@ desired effect
     @include('layouts.partials.footer')
     
     <!-- MODALES -->
-    @if (Auth::user()->activo and Auth::user()->rol=='alumno')
+    @if (Auth::user()->activo)
         @include('layouts.partials.modal_mensaje')
     @endif
 

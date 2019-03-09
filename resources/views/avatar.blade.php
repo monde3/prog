@@ -6,10 +6,18 @@
 
 @section('contentheader_title')
 @endsection
+	
+@section('contentheader_description')
+	<a id="btn_help"><i class="fa fa-question-circle"></i></a>
+@endsection
+
+@section('contentheader_breadcrumb')
+	<li class="active"><a href="{{ url('avatar') }}"> {{ trans('adminlte_lang::message.avatar') }}</a></li>
+@endsection
 
 @section('main-content')
 	@if (Auth::user()->activo and (Auth::user()->rol == 'administrador' or Auth::user()->rol == 'profesor'))
-		<div class="container spark-screen">
+		<div class="container-fluid spark-screen">
 			<div class="row">
 				<div class="col-md-10 col-md-offset-1">
 					<div class="box box-solid box-primary">
@@ -33,22 +41,24 @@
 				<div class="box box-solid box-primary">
 					<div class="box-header with-border">
 						<h3 class="box-title">
-							<b>Avatar</b>
+							<b>{{ trans('adminlte_lang::message.avatar') }}</b>
 						</h3>					
 					</div>
 					<div class="box-body">
 						<div class="col-sm-3">
-							<div class="item active">
-								<a href="{{ route('editarImagenAvatar') }}" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.editimage') }}">
-									<img id="avatar_img" class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'avatar']) }}" alt="alt">
-								</a>
+							<div class="hovereffect">
+								<img id="avatar_img" class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'avatar']) }}" alt="">
+						        <div class="overlay">
+					            	<h2></h2>
+							    	<p><a href="{{ route('editarImagenAvatar') }}">{{ trans('adminlte_lang::message.editavatar') }}</a></p> 
+						        </div>
 							</div>
 						</div>
 						<div class="col-sm-3">
 							<div class="row row-margin-bottom">
-								<div class="col-sm-4">
+								<div class="col-sm-3">
 								@if($avatar->img_head!=0)
-									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'head']) }}" alt="" data-toggle="tooltip" data-placement="left" title="{{ trans('adminlte_lang::message.head') }}">
+									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'head']) }}" alt="" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.head') }}">
 								@else
 									<p class="text-primary text-big">
 										<b>{{ trans('adminlte_lang::message.head') }}</b>
@@ -67,9 +77,9 @@
 								</div>
 							</div>
 							<div class="row row-margin-bottom">
-								<div class="col-sm-4">
+								<div class="col-sm-3">
 								@if($avatar->img_body!=0)
-									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'body']) }}" alt="" data-toggle="tooltip" data-placement="left" title="{{ trans('adminlte_lang::message.body') }}">
+									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'body']) }}" alt="" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.body') }}">
 								@else
 									<p class="text-primary text-big">
 										<b>{{ trans('adminlte_lang::message.body') }}</b>
@@ -88,9 +98,9 @@
 								</div>
 							</div>
 							<div class="row row-margin-bottom">
-								<div class="col-sm-4">
+								<div class="col-sm-3">
 								@if($avatar->img_hands!=0)
-									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'hands']) }}" alt="" data-toggle="tooltip" data-placement="left" title="{{ trans('adminlte_lang::message.hands') }}">
+									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'hands']) }}" alt="" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.hands') }}">
 								@else
 									<p class="text-primary text-big">
 										<b>{{ trans('adminlte_lang::message.hands') }}</b>
@@ -109,9 +119,9 @@
 								</div>
 							</div>
 							<div class="row row-margin-bottom">
-								<div class="col-sm-4">
+								<div class="col-sm-3">
 								@if($avatar->img_feet!=0)
-									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'feet']) }}" alt="" data-toggle="tooltip" data-placement="left" title="{{ trans('adminlte_lang::message.feet') }}">
+									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'feet']) }}" alt="" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.feet') }}">
 								@else
 									<p class="text-primary text-big">
 										<b>{{ trans('adminlte_lang::message.feet') }}</b>
@@ -130,9 +140,9 @@
 								</div>
 							</div>
 							<div class="row row-margin-bottom">
-								<div class="col-sm-4">
+								<div class="col-sm-3">
 								@if($avatar->img_weapon!=0)
-									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'weapon']) }}" alt="" data-toggle="tooltip" data-placement="left" title="{{ trans('adminlte_lang::message.weapon') }}">
+									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'weapon']) }}" alt="" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.weapon') }}">
 								@else
 									<p class="text-primary text-big">
 										<b>{{ trans('adminlte_lang::message.weapon') }}</b>
@@ -202,6 +212,17 @@
 
     	<script type="text/javascript">
 
+    		$(document).ready(function(){
+	    		$('#btn_help').click( function(e) {
+	    			e.preventDefault();
+      				$("#modal_mensaje_imagen").show();
+      				$("#modal_mensaje_imagen").attr("src","images/avatar-help.png");
+					$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.help') }}");
+					$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.helpavatartext') }}");
+					$("#modal_mensaje").show();
+	    			return false; } );
+    		});
+
     		$('select').on('change', function() {
 			  	var url_estado = "{{ url ('cambiarEstadoAvatar') }}"
 								.concat("/").concat({{ $avatar->user_id }})
@@ -209,8 +230,8 @@
 				$.ajax({
 				  type: "GET",
 				  url: url_estado
-				}).done(function t(response) {
-
+				})
+				.done(function t(response) {
 					var resp = response.split("\\");
 					if(resp[0]=="error"){
 						$("#modal_mensaje_titulo").text("Vida insuficiente");
