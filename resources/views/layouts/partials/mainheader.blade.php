@@ -60,7 +60,7 @@
                     <li class="dropdown notifications-menu">
                         <!-- Menu toggle button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-placement="bottom" title="{{ trans('adminlte_lang::message.notifications') }}">
-                            <i class="fa fa-bell-o"></i>
+                            <i class="fas fa-bell"></i>
                             <span class="label label-warning">{{ Auth::user()->numNotificaciones() }}</span>
                         </a>
                         <ul class="dropdown-menu">

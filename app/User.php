@@ -182,7 +182,7 @@ class User extends Authenticatable
                     $avatar->sumarExperiencia(5);
                 }
                 else if ($mostrarModal > Self::DIAS_SIN_ACCEDER){
-                    $avatar->restarExperiencia(2);
+                    $avatar->restarOro(5);
                 }
             }
 
@@ -194,6 +194,8 @@ class User extends Authenticatable
     public function mostrarModalFirstLogin(Request $request){
         // Recuperamos la variable de sesión flash
         $mostrarModal = $request->session()->pull('mostrarModalFirstLogin');
+        // Nos aseguramos de que la variable se ha eliminado
+        $request->session()->forget('mostrarModalFirstLogin');
 
         if (($this->rol == 'alumno') && isset($mostrarModal) && ($mostrarModal > 0))
         {
@@ -214,5 +216,6 @@ class User extends Authenticatable
         if ($this->rol == 'alumno'){
             return $this->avatar->porcentajeNivel();
         }
+        return 0;
     }
 }

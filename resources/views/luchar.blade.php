@@ -87,7 +87,7 @@
 	    		$('#btn_help').click( function(e) {
 	    			e.preventDefault();
       				$("#modal_mensaje_imagen").show();
-      				$("#modal_mensaje_imagen").attr("src","images/fight-help.png");
+      				$("#modal_mensaje_imagen").attr("src","images/help.png");
 					$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.help') }}");
 					$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.helpfighttext') }}");
 					$("#modal_mensaje").show();
@@ -102,6 +102,9 @@
 				  url: url_tarea
 				}).done(function t(response) {
 					var resp = response.split("\\");
+
+					alert(response);
+
 					if(resp[0]=="err"){
 						$("#modal_mensaje_titulo").text("ERROR");
 						$("#modal_mensaje_texto").text(resp[1]);
@@ -112,14 +115,14 @@
               				$("#modal_mensaje_imagen").attr("src","images/congrats.gif");
 							$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.congrats') }}");
 							$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.youwin') }}");
-              				$("#modal_mensaje_pie").text("+{{ \App\Avatar::ORO_VICTORIA }} {{ trans('adminlte_lang::message.gold') }}");
+              				$("#modal_mensaje_pie").text("+{{ \App\Avatar::ORO_VICTORIA }} {{ trans('adminlte_lang::message.gold') }}".concat(" -").concat(resp[3]).concat(" {{ trans('adminlte_lang::message.life') }}"));
 							$("#modal_mensaje").show();
 						}else if(resp[0]=="der"){
               				$("#modal_mensaje_imagen").show();
               				$("#modal_mensaje_imagen").attr("src","images/try_again.gif");
 							$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.pity') }}");
 							$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.youlose') }}");
-              				$("#modal_mensaje_pie").text("-".concat(resp[3]).concat("{{ trans('adminlte_lang::message.life') }}"));
+              				$("#modal_mensaje_pie").text("-".concat(resp[3]).concat(" {{ trans('adminlte_lang::message.life') }}"));
 							$("#modal_mensaje").show();
 						}
 						$("#header-oro").text(resp[1]);

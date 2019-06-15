@@ -44,45 +44,43 @@
 					</h3>					
 				</div>
 			<div class="box-body">
-				<div class="col-md-9">
-					<div class="gallery-row">
-					@if($imagenes_compradas->count() == 0)
-							{{ trans('adminlte_lang::message.noskinsbought') }}
-					@else
-						@foreach($imagenes_compradas as $avatar_imagen)
-						<div class="gallery-column">
-							@if(!in_array($avatar_imagen->imagen->id, $imagenes_seleccionadas))
-							<div class="gallery-img hovereffect">
-								@if($avatar_imagen->imagen->parte == 'avatar')
-								<a href="javascript:void(0);" onclick="showModalEstado({{$avatar_imagen->imagen->id}});">
-								@else
-								<a href="{{ route('cambiarImagenAvatar', array(
-											'imagen_id' => $avatar_imagen->imagen->id,
-											'estado' => '-'
-											)) }}">
-								@endif
+				<div class="gallery-row">
+				@if($imagenes_compradas->count() == 0)
+						{{ trans('adminlte_lang::message.noskinsbought') }}
+				@else
+					@foreach($imagenes_compradas as $avatar_imagen)
+					<div class="gallery-column">
+						@if(!in_array($avatar_imagen->imagen->id, $imagenes_seleccionadas))
+						<div class="gallery-img hovereffect">
+							@if($avatar_imagen->imagen->parte == 'avatar')
+							<a href="javascript:void(0);" onclick="showModalEstado({{$avatar_imagen->imagen->id}});">
 							@else
-							<div class="gallery-img selectedimage">
+							<a href="{{ route('cambiarImagenAvatar', array(
+										'imagen_id' => $avatar_imagen->imagen->id,
+										'estado' => '-'
+										)) }}">
 							@endif
-									<img class="img-responsive" src="{{ route('getImage', ['filename' => $avatar_imagen->imagen->filename]) }}">
-									<div class="text-center">
-										<b>{{ trans('adminlte_lang::message.'.$avatar_imagen->imagen->parte) }}</b>
-									</div>
-									<div class="text-center">
-									@if(!in_array($avatar_imagen->imagen->id, $imagenes_seleccionadas))
-										<b>{{ trans('adminlte_lang::message.select') }}</b>
-									@else
-										<b>{{ trans('adminlte_lang::message.selected') }}</b>
-									@endif
-									</div>
-								@if(!in_array($avatar_imagen->imagen->id, $imagenes_seleccionadas))
-								</a>
-								@endif
-							</div>
+						@else
+						<div class="gallery-img selectedimage">
+						@endif
+								<img class="img-responsive" src="{{ route('getImage', ['filename' => $avatar_imagen->imagen->filename]) }}">
+							@if(!in_array($avatar_imagen->imagen->id, $imagenes_seleccionadas))
+							</a>
+							@endif
 						</div>
-						@endforeach
-					@endif
+						<div class="gallery-text text-center">
+							<b>{{ trans('adminlte_lang::message.'.$avatar_imagen->imagen->parte) }}</b>
+						</div>
+						<div class="gallery-text text-center">
+						@if(!in_array($avatar_imagen->imagen->id, $imagenes_seleccionadas))
+							<b>{{ trans('adminlte_lang::message.select') }}</b>
+						@else
+							<b>{{ trans('adminlte_lang::message.selected') }}</b>
+						@endif
+						</div>
 					</div>
+					@endforeach
+				@endif
 				</div>
 			</div>
 		</div>
@@ -98,7 +96,7 @@
 					<h3 class="modal-title">Estado</h3>
 				</div>
 				<div class="modal-body">
-					<div class="container spark-screen">
+					<div class="container-fluid spark-screen">
 						<h4>{{ trans('adminlte_lang::message.selectstate') }}</h4>
 						<div class="col-sm-3">
 							<select id="selector_estado" name="role" class="form-control" >             
@@ -127,7 +125,7 @@
 		$('#btn_help').click( function(e) {
 			e.preventDefault();
 			$("#modal_mensaje_imagen").show();
-			$("#modal_mensaje_imagen").attr("src","images/avatar-help.png");
+			$("#modal_mensaje_imagen").attr("src","/images/help.png");
 			$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.help') }}");
 			$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.helpavatarimagetext') }}");
 			$("#modal_mensaje").show();

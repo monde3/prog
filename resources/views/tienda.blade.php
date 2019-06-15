@@ -11,6 +11,11 @@
 	<a id="btn_help"><i class="fa fa-question-circle"></i></a>
 @endsection
 
+<!-- RUTA PARTE SUPERIOR -->
+@section('contentheader_breadcrumb')
+	<li class="active">{{ trans('adminlte_lang::message.shop') }}</li>
+@endsection
+
 @section('main-content')
 	@if (Auth::user()->rol=='alumno')
 		@include('layouts.alumno.tienda')
@@ -27,7 +32,7 @@
 		$('#btn_help').click( function(e) {
 			e.preventDefault();
 			$("#modal_mensaje_imagen").show();
-			$("#modal_mensaje_imagen").attr("src","images/avatar-help.png");
+      		$("#modal_mensaje_imagen").attr("src","images/help.png");
 			$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.help') }}");
 			$("#modal_mensaje_texto").text("{{ (Auth::user()->rol=='alumno') ? trans('adminlte_lang::message.helpusershoptext') : trans('adminlte_lang::message.helpadminshoptext') }}");
 			$("#modal_mensaje").show();

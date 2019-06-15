@@ -46,6 +46,12 @@ a.img-shop {
   max-width: 10%;
 }
 
+img.img-edicion {
+  max-height: 200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -66,37 +72,43 @@ body {
   -ms-flex-wrap: wrap; /* IE10 */
   flex-wrap: wrap;
   padding: 0 4px;
+  margin-bottom: 3%;
 }
 
-/* Create four equal columns that sits next to each other */
 .gallery-column {
   -ms-flex: 15%; /* IE10 */
-  flex: 15%;
-  max-width: 15%;
+  flex: 12%;
+  max-width: 13%;
   padding: 0 4px;
 }
 
 .gallery-column .gallery-img {
   margin-top: 8px;
   vertical-align: middle;
-  height: 300px;
+  height: 76%;
 }
 
-/* Responsive layout - makes a two column-layout instead of four columns */
+
+
 @media screen and (max-width: 1000px) {
   .gallery-column {
     -ms-flex: 35%;
     flex: 35%;
     max-width: 35%;
   }
+  .gallery-column .gallery-img {
+    height: 70%;
+  }
 }
 
-/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 700px) {
   .gallery-column {
     -ms-flex: 75%;
     flex: 75%;
     max-width: 75%;
+  }
+  .gallery-column .gallery-img {
+    height: 60%;
   }
 }
 
@@ -107,6 +119,8 @@ body {
 
 /*https://codepen.io/anon/pen/ywJBqQ*/
 .hovereffect {
+  width: 100%;
+  height: 100%;
   float: left;
   overflow: hidden;
   position: relative;
@@ -119,11 +133,14 @@ body {
 }
 
 .hovereffect .overlay {
+  width: 100%;
+  height: 100%;
   position: absolute;
   overflow: hidden;
   top: 0;
   left: 0;
-  padding: 20px 20px;
+  padding: 0.8em 0.8em;
+  /*padding: 50px 20px;*/
   background: none !important;
 }
 
@@ -152,8 +169,10 @@ body {
   position: relative;
   font-size: 17px;
   overflow: hidden;
-  padding: 0.5em 0;
+  padding: 3% 0;
   background-color: transparent;
+  margin-top: 20%;
+  margin-bottom: 20%;
 }
 
 .hovereffect h2:after {
@@ -175,6 +194,12 @@ body {
   transform: translate3d(0,0,0);
 }
 
+.hovereffect h4 {
+  margin-top: 10%;
+  font-size: 1vw;
+  margin-bottom: 10%;
+}
+
 .hovereffect a, .hovereffect p {
   color: #333;
   opacity: 0;
@@ -185,11 +210,6 @@ body {
   transform: translate3d(100%,0,0);
 }
 
-.hovereffect p {
-  font-size: 24px;
-  font-weight: bold;
-}
-
 .hovereffect:hover a, .hovereffect:hover p {
   opacity: 1;
   filter: alpha(opacity=100);
@@ -198,6 +218,49 @@ body {
 }
 
 .hovereffect:hover p {
-  font-size: 24px;
+  font-size: 2vw;
   font-weight: bold;
+}
+
+/* Imagen con número en la esquina */
+.bell {
+  display: inline-block;
+  position: relative;
+  text-align: right;
+}
+
+.bell b{
+  display: flex;
+  min-width: 54px;
+}
+
+.bellnumbers {
+  position: absolute;
+  top: 3px;
+  font-size:15px;
+  font-weight: bold; 
+  background-color: cornflowerblue;
+  width: 28px;
+  text-align: center;
+  color:#EE5;
+  z-index: 2;
+  border-radius: 6px;
+}
+
+.nivel-home {
+  text-align: center;
+  display: inline-block;
+  font-weight: bold;
+  font-size: xx-large;
+  line-height: 1.2;
+  /*letter-spacing: -.00278rem;*/
+  -webkit-font-smoothing: antialiased;
+  text-shadow: 0px 3px 2px rgba(0,0,0,0.4),
+               0px 4px 9px rgba(0,0,0,0.1),
+               0px 10px 20px rgba(0,0,0,0.1)
+}
+
+a.btn-luchar {
+  margin-top: 10px;
+  padding: 10px 12px !important;
 }

@@ -27,7 +27,7 @@
 	@else
 		<div class="container-fluid spark-screen">
 			<div class="row">
-				<div class="col-md-4 col-md-offset-1">
+				<div class="col-md-5">
 					<!--INFORMACION DEL AVATAR-->
 					@if (Auth::user()->rol == 'alumno')
 					<div class="row">
@@ -36,82 +36,67 @@
 								<h3 class="box-title"><b>Avatar</b></h3>						
 							</div>
 							<div class="box-body">
-								<div class="col-md-5">
+								<div class="col-md-6">
 									<div class="hovereffect">
 										<a href="{{ url('/avatar') }}" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.avatar') }}">
 											<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'avatar']) }}" alt="">
 										</a>
 									</div>
 								</div>
-								<div class="col-md-5">
+								<div class="col-md-2">
 									<div class="row">
-										<div class="col-md-5">
+										<span class="bell">
 										@if($avatar->img_head!=0)
 											<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'head']) }}" alt="">
 										@else
 											<b>{{ trans('adminlte_lang::message.head') }}</b>
 										@endif
-										</div>
-										<div class="col-md-2">
-											<b>{{ $avatar->head }}</b>
-										</div>
+										    <span class="bellnumbers">{{ $avatar->head }}</span>
+										</span>
 									</div>
 									<div class="row">
-										<div class="col-md-5">
+										<span class="bell">
 										@if($avatar->img_body!=0)
 											<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'body']) }}" alt="">
 										@else
 											<b>{{ trans('adminlte_lang::message.body') }}</b>
 										@endif
-										</div>
-										<div class="col-md-2">
-											<b>{{ $avatar->body }}</b>
-										</div>
+										    <span class="bellnumbers">{{ $avatar->body }}</span>
+										</span>
 									</div>
 									<div class="row">
-										<div class="col-md-5">
+										<span class="bell">
 										@if($avatar->img_hands!=0)
 											<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'hands']) }}" alt="">
 										@else
 											<b>{{ trans('adminlte_lang::message.hands') }}</b>
 										@endif
-										</div>
-										<div class="col-md-2">
-											<b>{{ $avatar->hands }}</b>
-										</div>
+										    <span class="bellnumbers">{{ $avatar->hands }}</span>
+										</span>
 									</div>
 									<div class="row">
-										<div class="col-md-5">
+										<span class="bell">
 										@if($avatar->img_feet!=0)
 											<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'feet']) }}" alt="">
 										@else
 											<b>{{ trans('adminlte_lang::message.feet') }}</b>
 										@endif
-										</div>
-										<div class="col-md-2">
-											<b>{{ $avatar->feet }}</b>
-										</div>
+										    <span class="bellnumbers">{{ $avatar->feet }}</span>
+										</span>
 									</div>
 									<div class="row">
-										<div class="col-md-5">
+										<span class="bell">
 										@if($avatar->img_weapon!=0)
 											<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'weapon']) }}" alt="">
 										@else
 											<b>{{ trans('adminlte_lang::message.weapon') }}</b>
 										@endif
-										</div>
-										<div class="col-md-2">
-											<b>{{ $avatar->weapon }}</b>
-										</div>
+										    <span class="bellnumbers">{{ $avatar->weapon }}</span>
+										</span>
 									</div>
 								</div>
-								<div class="col-md-1">
-									<p class="text-primary">
-										<b>{{ trans('adminlte_lang::message.level') }}</b></br>
-									</p>
-									<p class="text-primary text-center" style="font-size: 3em">
-										<b>{{ $nivelAvatar }}</b>
-									</p>
+								<div class="col-md-2 col-md-offset-1">
+								    <span class="text-primary nivel-home">{{ trans('adminlte_lang::message.level') }} {{ $nivelAvatar }}</span>
 								</div>
 							</div>
 						</div>
@@ -154,7 +139,7 @@
 					</div>
 				</div>
 
-				<div class="col-md-6">
+				<div class="col-md-7">
 					<div class="box box-solid box-primary">
 						<div class="box-header with-border">
 							<h3 class="box-title"><b>Calendario</b></h3>

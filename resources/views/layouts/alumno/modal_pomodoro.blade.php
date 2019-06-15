@@ -40,8 +40,8 @@
           const DESCANSO = 2;
           const PRE_POMODORO = 3;
 
-          const TIEMPO_POMODORO = 1500; // 25 minutos
-          const TIEMPO_DESCANSO = 300; // 5 minutos
+          const TIEMPO_POMODORO = 15;//00; // 25 minutos
+          const TIEMPO_DESCANSO = 3;//00; // 5 minutos
           const TIEMPO_INTERACCION = 30;
 
           var tiempo = {
@@ -133,6 +133,7 @@
                     if (fase_actual == 1){
                       fase_actual = 0;
                       $("#header-oro").text(resp[1]);
+                      $("#header-exp").text(resp[2]);
                     }
                     else{
                       fase_actual = 1;
@@ -140,6 +141,7 @@
                     }
                   }
                   else{
+                    //Ha habido algún problema
                     reset_all();
                     $("#modal_pomodoro").modal('toggle');
                     $("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.warning') }}");

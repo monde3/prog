@@ -8,6 +8,7 @@ use App\User;
 
 class UserController extends Controller
 {
+    const ITEMS_PAGINA = 10;
     /**
      * Pantalla de administrar usuarios
      *
@@ -21,7 +22,7 @@ class UserController extends Controller
             abort (403);
         }
 
-        $usuarios = User::orderBy('apellidos', 'asc')->orderBy('nombre', 'asc')->paginate(10); 
+        $usuarios = User::orderBy('apellidos', 'asc')->orderBy('nombre', 'asc')->paginate(Self::ITEMS_PAGINA); 
 
         return view('administrarusuarios', compact('usuarios'));
     }

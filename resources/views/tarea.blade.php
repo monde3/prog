@@ -7,6 +7,12 @@
 @section('contentheader_title')	
 @endsection
 
+@section('contentheader_description')
+    @if (Auth::user()->rol=='alumno')
+	<a id="btn_help"><i class="fa fa-question-circle"></i></a>
+    @endif
+@endsection
+
 <!-- RUTA PARTE SUPERIOR -->
 @section('contentheader_breadcrumb')
     @if (Auth::user()->rol=='alumno')
@@ -27,7 +33,7 @@
 @endsection
 
 @section('main-content')
-	<div class="container spark-screen">
+	<div class="container-fluid spark-screen">
 		@if (Auth::user()->rol=='alumno')
 			@include('layouts.alumno.tarea')
 		@elseif (Auth::user()->rol=='profesor')
@@ -42,6 +48,18 @@
     @if (Auth::user()->rol=='alumno')
 
     	<script>
+
+			$(document).ready(function(){
+				$('#btn_help').click( function(e) {
+					e.preventDefault();
+					$("#modal_mensaje_imagen").show();
+					$("#modal_mensaje_imagen").attr("src","../images/help.png");
+					$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.help') }}");
+					$("#modal_mensaje_texto").text("{{ (Auth::user()->rol=='alumno') ? trans('adminlte_lang::message.helpusertask') : trans('adminlte_lang::message.helpproftask') }}");
+					$("#modal_mensaje").show();
+					return false; } );
+			});
+
     		setInterval(function() {
 	    		var boton = $("#boton").text().trim();
 	    		if (boton == "Parar"){

@@ -171,10 +171,16 @@ Route::get('tienda', [
     'uses' => 'TiendaController@index'
 ]);
 
-Route::post('subirImagenAvatar', [
-    'as' => 'subirImagenAvatar',
+Route::post('subirSkin', [
+    'as' => 'subirSkin',
     'middleware' => 'auth',
-    'uses' => 'TiendaController@subirImagenAvatar'
+    'uses' => 'TiendaController@subirSkin'
+]);
+
+Route::post('editarSkin/{imagen_id}', [
+    'as' => 'editarSkin',
+    'middleware' => 'auth',
+    'uses' => 'TiendaController@editarSkin'
 ]);
 
 Route::get('eliminarImagen/{imagen_id}', [
@@ -187,6 +193,12 @@ Route::get('getImage/{filename}', [
     'as' => 'getImage',
     'middleware' => 'auth',
     'uses' => 'TiendaController@getImage'
+]);
+
+Route::get('getImageById/{imagen_id}', [
+    'as' => 'getImageById',
+    'middleware' => 'auth',
+    'uses' => 'TiendaController@getImageById'
 ]);
 
 Route::get('comprarImagen/{imagen_id}', [

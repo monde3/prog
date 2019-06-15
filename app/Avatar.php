@@ -21,11 +21,13 @@ class Avatar extends Model
     /*
      (amondejar)
      */
-    const PUNTOS_POR_NIVEL = 100; //Intervalo con el que se sube de nivel
+    const FACTOR_SUBIDA_NIVEL = 100; // Lentitud a la que se sube de nivel
     const VIDA_MAXIMA = 100; // Puntuación máxima de vida que se puede obtener
     const EXP_ADICIONAL = 20; // Porcentaje de puntos de vida, adicionales al sumar experiencia
     const ORO_VICTORIA = 10; // Puntos de oro por ganar una batalla
+    const ORO_LEVEL_UP = 50; // Puntos de oro por subir de nivel
     const VIDA_HERIDO = 20; // Puntos de vida mínimos para estado activo/inactivo
+    const NUMERO_PARTES_ARMADURA = 4; // Número de piezas que forman la armadura de un avatar
 
     protected $table = 'avatar';
     
@@ -54,18 +56,28 @@ class Avatar extends Model
     // Calculamos el nivel en el que nos encontramos
     public function nivelAvatar()
     {
-            return floor($this->exp / Self::PUNTOS_POR_NIVEL);
+            return floor(sqrt($this->exp/Self::FACTOR_SUBIDA_NIVEL));
     }
 
     // (amondejar) Puntos que hemos conseguido en el nivel actual
     public function porcentajeNivel(){
-        if ($this->alumno->rol != 'alumno'){
+        if ($this->alumno->rol != 'alumno'
+            || $this->exp == 0){
             return 0;
         }
-        $puntosEnNivel = $this->exp % Self::PUNTOS_POR_NIVEL;
-        $porcentaje = $puntosEnNivel * 100 / Self::PUNTOS_POR_NIVEL;
+        $nivel = $this->nivelAvatar();
+        $proximo_nivel = $nivel + 1;
+        $puntos_nivel_actual = pow($nivel, 2) * Self::FACTOR_SUBIDA_NIVEL;
+        $puntos_nivel_proximo = pow($proximo_nivel, 2) * Self::FACTOR_SUBIDA_NIVEL;
 
-        return $porcentaje;
+        // Puntos que hemos ganado en el nivel actual
+        $puntos_en_nivel = $this->exp - $puntos_nivel_actual;
+
+        // Puntos desde nivel actual hasta proximo nivel
+        $puntos_nivel = $puntos_nivel_proximo - $puntos_nivel_actual;
+
+        $porcentaje = $puntos_en_nivel * 100 / $puntos_nivel;
+        return floor($porcentaje);
     }
 
     /** (amondejar)
@@ -82,6 +94,7 @@ class Avatar extends Model
         $this->save();
 
         if ($nivel_antes != $this->nivelAvatar()){
+            $this->sumarOro(Self::ORO_LEVEL_UP);
             return 1;
         }
         return 0;
@@ -159,13 +172,7 @@ class Avatar extends Model
     }
 
     public function imagePath($parte){
-        if($this->vida < 20){
-            $this->cambiarEstado('herido');
-        }else{
-            if($this->estado == 'herido'){
-                $this->cambiarEstado('inactivo');
-            }
-        }
+        $this->estadoActual();
 
         $image_id = 0;
 
@@ -230,28 +237,35 @@ class Avatar extends Model
     public function lucha($oponente){
         if ($this->vida >= 20 and $this->estado = 'activo'){
             // Obtenemos la suma de los puntos de cada usuario
-            $points_usuario = $this->head + $this->body + $this->hands + 
-                        $this->sm + $this->weapon;
-            $points_oponente = $oponente->head + $oponente->body + $oponente->hands + 
+            $puntos_usuario = $this->head + $this->body + $this->hands + 
+                        $this->feet + $this->weapon;
+            $puntos_oponente = $oponente->head + $oponente->body + $oponente->hands + 
                         $oponente->feet + $oponente->weapon;
 
-            $aleatorio = rand();
+            $numero_aleatorio = rand();
 
-            // 
-            $proporcion = $points_usuario / ($points_usuario + $points_oponente);
+            $proporcion = $puntos_usuario / ($puntos_usuario + $puntos_oponente);
+
             // Valor para comparar con el aleatorio que hemos obtenido
             $separador = getrandmax() * $proporcion;
-            $victoria = $aleatorio > $separador;
 
-            $armadura_usuario = $this->head + $this->body + $this->hands + $this->feet;
-            // Comparamos la media de los puntos de armadura del usuario con los puntos del arma del oponente
+            // La victoria ocurrirá cuando el número aleatorio pertenezca
+            // a la parte de números aleatorios que corresponde al
+            // usuario que inicia el combate
+            $victoria = $numero_aleatorio <= $separador;
+
+            $armadura_usuario = ($this->head + $this->body + $this->hands + $this->feet)
+                                    / Self::NUMERO_PARTES_ARMADURA;
+
+            // Comparamos la media de los puntos de armadura del usuario
+            // con los puntos del arma del oponente
             if($victoria){
-                $vida_restar = (abs($armadura_usuario-$oponente->weapon) > 10 ? 1
-                                 : ($armadura_usuario<$oponente->weapon ? 0 : 2));
+                $vida_restar = (abs($armadura_usuario-$oponente->weapon) > 10 ? 0
+                                 : ($armadura_usuario>$oponente->weapon ? 1 : 2));
                 $this->sumarOro(Self::ORO_VICTORIA);
             }else{
-                $vida_restar = (abs($armadura_usuario-$oponente->weapon) > 10 ? 4
-                                 : ($armadura_usuario<$oponente->weapon ? 3 : 5));
+                $vida_restar = (abs($armadura_usuario-$oponente->weapon) > 10 ? 3
+                                 : ($armadura_usuario>$oponente->weapon ? 4 : 5));
             }
             $this->restarVida($vida_restar * 2);
         }
@@ -274,6 +288,19 @@ class Avatar extends Model
              ($this->vida < 20 and $estado == 'herido') )){
             $this->estado = $estado;
             $this->save();
+        }
+    }
+
+    /**
+     * Actualiza el estado en función de la vida que le quede
+     */
+    public function estadoActual(){
+        if($this->vida < 20){
+            $this->cambiarEstado('herido');
+        }else{
+            if($this->estado == 'herido'){
+                $this->cambiarEstado('inactivo');
+            }
         }
     }
 

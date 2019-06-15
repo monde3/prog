@@ -44,7 +44,7 @@ class TareaAlumnoController extends Controller
         {
             $exito = $tarea->completar();
         }
-        return view('tarea', compact('tarea', 'exito'));
+        return view('tarea', compact('tarea', 'exito'))->with(array('message' => trans('adminlte_lang::message.taskcompleted')));;
     }
 
 }

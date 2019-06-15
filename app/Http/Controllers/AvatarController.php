@@ -12,6 +12,10 @@ use App\User;
 
 class AvatarController extends Controller
 {
+    const MEJORA = 5;
+    const COSTE_MEJORA = 10;
+    const OK_RESPONSE = 200;
+
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +30,9 @@ class AvatarController extends Controller
         $avatar = Avatar::where('user_id', '=', $request->user()->id)->firstOrFail();
 
         //Calculamos el nivel en el que nos encontramos (amondejar)
-        $nivelAvatar = floor($avatar->exp / Avatar::PUNTOS_POR_NIVEL);
+        $nivelAvatar = $avatar->nivelAvatar();
+        //Actualizamos el estado
+        $avatar->estadoActual();
 
         return view('avatar', compact('avatar', 'nivelAvatar'));
     }
@@ -43,30 +49,27 @@ class AvatarController extends Controller
         $valor_avatar = '';
         $avatar = Avatar::where('user_id', '=', $avatar_user_id)->firstOrFail();
 
-        if($avatar->oro >= 5){
-
+        if($avatar->oro >= Self::COSTE_MEJORA){
             if($valor == 'head'){
-                $avatar->sumarHead(5);
+                $avatar->sumarHead(Self::MEJORA);
                 $valor_avatar = $avatar->head;
             }else if($valor == 'body'){
-                $avatar->sumarBody(5);
+                $avatar->sumarBody(Self::MEJORA);
                 $valor_avatar = $avatar->body;
             }else if($valor == 'hands'){
-                $avatar->sumarHands(5);
+                $avatar->sumarHands(Self::MEJORA);
                 $valor_avatar = $avatar->hands;
             }else if($valor == 'feet'){
-                $avatar->sumarFoot(5);
+                $avatar->sumarFeet(Self::MEJORA);
                 $valor_avatar = $avatar->feet;
             }else if($valor == 'weapon'){
-                $avatar->sumarWeapon(5);
+                $avatar->sumarWeapon(Self::MEJORA);
                 $valor_avatar = $avatar->weapon;
             }
-
-            $avatar->restarOro(5);
-            
+            $avatar->restarOro(Self::COSTE_MEJORA);
             $value = $avatar->oro."/".$valor_avatar;
         }else{
-            $value = "error/No tiene oro suficiente";
+            $value = "error";
         }
         return $value;
     }
@@ -83,9 +86,10 @@ class AvatarController extends Controller
 
         $avatares = Avatar::where('estado', '=', 'activo')
                     ->where('user_id', '!=', $request->user()->id)
-                    ->where(DB::raw('exp DIV '.Avatar::PUNTOS_POR_NIVEL), '=', floor($avatar_usuario->exp/Avatar::PUNTOS_POR_NIVEL))
+                    ->where(DB::raw('FLOOR(SQRT(exp DIV '.Avatar::FACTOR_SUBIDA_NIVEL.'))'),
+                            '=', $avatar_usuario->nivelAvatar())
                     ->get();
-                    
+
         return view('luchar', compact('avatares'));
     }
 
@@ -140,6 +144,6 @@ class AvatarController extends Controller
     public function imagenAvatar(request $request, $user_id, $parte){
         $avatar = User::find($user_id)->avatar;
         $file = Storage::disk('images')->get($avatar->imagePath($parte));
-        return Response($file, 200);
+        return Response($file, Self::OK_RESPONSE);
     }
 }

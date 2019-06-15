@@ -12,7 +12,7 @@
 @endsection
 
 @section('contentheader_breadcrumb')
-	<li class="active"><a href="{{ url('avatar') }}"> {{ trans('adminlte_lang::message.avatar') }}</a></li>
+	<li class="active">{{ trans('adminlte_lang::message.avatar') }}</li>
 @endsection
 
 @section('main-content')
@@ -45,7 +45,8 @@
 						</h3>					
 					</div>
 					<div class="box-body">
-						<div class="col-sm-3">
+						<!-- IMAGEN AVATAR -->
+						<div class="col-sm-4">
 							<div class="hovereffect">
 								<img id="avatar_img" class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'avatar']) }}" alt="">
 						        <div class="overlay">
@@ -54,114 +55,96 @@
 						        </div>
 							</div>
 						</div>
+						<!-- PARTES -->
 						<div class="col-sm-3">
 							<div class="row row-margin-bottom">
-								<div class="col-sm-3">
-								@if($avatar->img_head!=0)
-									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'head']) }}" alt="" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.head') }}">
-								@else
-									<p class="text-primary text-big">
+								<div class="col-sm-5">
+									<span class="bell">
+									@if($avatar->img_head!=0)
+										<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'head']) }}" alt="">
+									@else
 										<b>{{ trans('adminlte_lang::message.head') }}</b>
-									</p>
-								@endif
+									@endif
+									    <span id="head_value" class="bellnumbers">{{ $avatar->head }}</span>
+									</span>
 								</div>
 								<div class="col-sm-2 vcenter">
-									<p id="head_value" class="text-primary text-big">
-										<b>{{ $avatar->head }}</b>
-									</p>
-								</div>
-								<div class="col-sm-2 vcenter">
-									<button id="btn_head" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="top" title="{{ trans('adminlte_lang::message.improve') }}">
+									<button id="btn_head" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="right" title="{{ trans('adminlte_lang::message.improve') }}">
 										<i class="glyphicon glyphicon-plus"></i>
 									</button>
 								</div>
 							</div>
 							<div class="row row-margin-bottom">
-								<div class="col-sm-3">
-								@if($avatar->img_body!=0)
-									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'body']) }}" alt="" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.body') }}">
-								@else
-									<p class="text-primary text-big">
+								<div class="col-sm-5">
+									<span class="bell">
+									@if($avatar->img_body!=0)
+										<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'body']) }}" alt="">
+									@else
 										<b>{{ trans('adminlte_lang::message.body') }}</b>
-									</p>
-								@endif
+									@endif
+									    <span id="body_value" class="bellnumbers">{{ $avatar->body }}</span>
+									</span>
 								</div>
 								<div class="col-sm-2 vcenter">
-									<p id="body_value" class="text-primary text-big">
-										<b>{{ $avatar->body }}</b>
-									</p>
-								</div>
-								<div class="col-sm-2 vcenter">
-									<button id="btn_body" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="top" title="{{ trans('adminlte_lang::message.improve') }}">
+									<button id="btn_body" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="right" title="{{ trans('adminlte_lang::message.improve') }}">
 										<i class="glyphicon glyphicon-plus"></i>
 									</button>
 								</div>
 							</div>
 							<div class="row row-margin-bottom">
-								<div class="col-sm-3">
-								@if($avatar->img_hands!=0)
-									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'hands']) }}" alt="" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.hands') }}">
-								@else
-									<p class="text-primary text-big">
+								<div class="col-sm-5">
+									<span class="bell">
+									@if($avatar->img_hands!=0)
+										<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'hands']) }}" alt="">
+									@else
 										<b>{{ trans('adminlte_lang::message.hands') }}</b>
-									</p>
-								@endif
+									@endif
+									    <span id="hands_value" class="bellnumbers">{{ $avatar->hands }}</span>
+									</span>
 								</div>
 								<div class="col-sm-2 vcenter">
-									<p id="hands_value" class="text-primary text-big">
-										<b>{{ $avatar->hands }}</b>
-									</p>
-								</div>
-								<div class="col-sm-2 vcenter">
-									<button id="btn_hands" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="top" title="{{ trans('adminlte_lang::message.improve') }}">
+									<button id="btn_hands" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="right" title="{{ trans('adminlte_lang::message.improve') }}">
 										<i class="glyphicon glyphicon-plus"></i>
 									</button>
 								</div>
 							</div>
 							<div class="row row-margin-bottom">
-								<div class="col-sm-3">
-								@if($avatar->img_feet!=0)
-									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'feet']) }}" alt="" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.feet') }}">
-								@else
-									<p class="text-primary text-big">
+								<div class="col-sm-5">
+									<span class="bell">
+									@if($avatar->img_feet!=0)
+										<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'feet']) }}" alt="">
+									@else
 										<b>{{ trans('adminlte_lang::message.feet') }}</b>
-									</p>
-								@endif
+									@endif
+									    <span id="feet_value" class="bellnumbers">{{ $avatar->feet }}</span>
+									</span>
 								</div>
 								<div class="col-sm-2 vcenter">
-									<p id="hands_value" class="text-primary text-big">
-										<b>{{ $avatar->feet }}</b>
-									</p>
-								</div>
-								<div class="col-sm-2 vcenter">
-									<button id="btn_foot" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="top" title="{{ trans('adminlte_lang::message.improve') }}">
+									<button id="btn_feet" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="right" title="{{ trans('adminlte_lang::message.improve') }}">
 										<i class="glyphicon glyphicon-plus"></i>
 									</button>
 								</div>
 							</div>
 							<div class="row row-margin-bottom">
-								<div class="col-sm-3">
-								@if($avatar->img_weapon!=0)
-									<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'weapon']) }}" alt="" data-toggle="tooltip" data-placement="bottom" title="{{ trans('adminlte_lang::message.weapon') }}">
-								@else
-									<p class="text-primary text-big">
+								<div class="col-sm-5">
+									<span class="bell">
+									@if($avatar->img_weapon!=0)
+										<img class="img-responsive img-rounded" src="{{ route('imagenAvatar', ['user_id' => $avatar->user_id, 'parte' => 'weapon']) }}" alt="">
+									@else
 										<b>{{ trans('adminlte_lang::message.weapon') }}</b>
-									</p>
-								@endif
+									@endif
+									    <span id="weapon_value" class="bellnumbers">{{ $avatar->weapon }}</span>
+									</span>
 								</div>
 								<div class="col-sm-2 vcenter">
-									<p id="weapon_value" class="text-primary text-big">
-										<b>{{ $avatar->weapon }}</b>
-									</p>
-								</div>
-								<div class="col-sm-2 vcenter">
-									<button id="btn_weapon" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="top" title="{{ trans('adminlte_lang::message.improve') }}">
+									<button id="btn_weapon" type="button" class="btn btn-primary btn-circle" onclick="aumentar_nivel(this.id)" data-toggle="tooltip" data-placement="right" title="{{ trans('adminlte_lang::message.improve') }}">
 										<i class="glyphicon glyphicon-plus"></i>
 									</button>
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-2">
+						<!-- BOTON LUCHAR Y SELECTOR ESTADO -->
+						<div class="col-sm-3">
 					    @if($avatar->estado == 'herido')
 							<select name="role" class="form-control" disabled>
 					    @else
@@ -188,9 +171,9 @@
 							</select>
 
 						    @if($avatar->estado == 'activo')
-			                <a id="btn_luchar" class="btn btn-block btn-danger" href="{{ route('luchar') }}">
+			                <a id="btn_luchar" class="btn btn-block btn-danger btn-luchar" href="{{ route('luchar') }}">
 						    @else
-		                	<a id="btn_luchar" class="btn btn-block btn-danger disabled" href="{{ route('luchar') }}">
+		                	<a id="btn_luchar" class="btn btn-block btn-danger btn-luchar disabled" href="{{ route('luchar') }}">
 						    @endif
 			                	<b>{{ trans('adminlte_lang::message.fight') }}</b>
 			                </a>
@@ -216,7 +199,7 @@
 	    		$('#btn_help').click( function(e) {
 	    			e.preventDefault();
       				$("#modal_mensaje_imagen").show();
-      				$("#modal_mensaje_imagen").attr("src","images/avatar-help.png");
+      				$("#modal_mensaje_imagen").attr("src","images/help.png");
 					$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.help') }}");
 					$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.helpavatartext') }}");
 					$("#modal_mensaje").show();
@@ -255,63 +238,35 @@
 			});
 
     		function aumentar_nivel(clicked_id){
-    			var valor = get_valor(clicked_id);
+    			var parte = get_valor(clicked_id);
 
                 var url_tarea = "{{ url ('aumentarNivelAvatar') }}"
                                 .concat("/").concat({{ $avatar->user_id }})
-                                .concat("/").concat(valor);
+                                .concat("/").concat(parte);
 				$.ajax({
-				  type: "GET",
-				  url: url_tarea
+				  	type: "GET",
+        			async: false,
+				  	url: url_tarea
 				}).done(function t(response) {
-
 					var resp = response.split("/");
 					if(resp[0]=="error"){
-						$("#modal_mensaje_titulo").text("Oro insuficiente");
-						$("#modal_mensaje_texto").text(resp[1]);
+						$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.notenoughgold') }}");
+						$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.getgoldmessage') }}");
 						$("#modal_mensaje").show();
 					}
 					else{
 						$("#header-oro").text(resp[0]);
-	                	set_valor(clicked_id,resp[1]);	
+	                	set_valor(parte,resp[1]);	
 					}
                 });
     		};
 
     		function get_valor(id){
-    			if(id == "btn_head"){
-    				return "head";
-    			}
-    			else if(id == "btn_body"){
-    				return "body";
-    			}
-    			else if(id == "btn_hands"){
-    				return "hands";
-    			}
-    			else if(id == "btn_foot"){
-    				return "foot";
-    			}
-    			else if(id == "btn_weapon"){
-    				return "weapon";
-    			}
+    			return id.replace("btn_","");
     		}
 
-    		function set_valor(id,value){
-    			if(id == "btn_head"){
-                	$("#head_value").html("<b>".concat(value).concat("</b>"));
-    			}
-    			else if(id == "btn_body"){
-                	$("#body_value").html("<b>".concat(value).concat("</b>"));
-    			}
-    			else if(id == "btn_hands"){
-                	$("#hands_value").html("<b>".concat(value).concat("</b>"));
-    			}
-    			else if(id == "btn_foot"){
-                	$("#foot_value").html("<b>".concat(value).concat("</b>"));
-    			}
-    			else if(id == "btn_weapon"){
-                	$("#weapon_value").html("<b>".concat(value).concat("</b>"));
-    			}
+    		function set_valor(parte,value){
+    			$("#".concat(parte).concat("_value")).html(value);
     		}
     	</script>
 

@@ -13,9 +13,10 @@ use Carbon\Carbon;
 
 class MisTareasActivasController extends Controller {
 
-    const POMODORO = 5;
-    const DESCANSO = 5;
-    const ORO_SUMAR = 5;
+    const POMODORO = 1500; // 25 minutos
+    const DESCANSO = 300;  // 5 minutos
+    const ORO_SUMAR = 10;
+    const EXP_SUMAR = 10;
     const VIDA_SUMAR = 5;
 
     /**
@@ -97,7 +98,6 @@ class MisTareasActivasController extends Controller {
                     $diff = $inicio->diff($fin);
 
                     // Comprobamos los minutos (i) 
-                    //if ($diff->i >= Self::DESCANSO){
                     if ($diff->s >= Self::DESCANSO){
                         $avatar->sumarVida(Self::VIDA_SUMAR);
                     }
@@ -119,9 +119,9 @@ class MisTareasActivasController extends Controller {
             $diff = $inicio_pomodoro->diff($fin_pomodoro);
 
             // i = MINUTOS
-            //if ($diff->i >= Self::POMODORO){
             if ($diff->s >= Self::POMODORO){
                 $avatar->sumarOro(Self::ORO_SUMAR);
+                $avatar->sumarExperiencia(Self::EXP_SUMAR);
             }
 
             // Cerramos el intervalo de trabajo en la tarea
@@ -139,7 +139,7 @@ class MisTareasActivasController extends Controller {
 
             $tiempo->save();
 
-            $value = 'OK/'.$avatar->oro;
+            $value = 'OK/'.$avatar->oro.'/'.$avatar->exp;
         }
  
         return $value;

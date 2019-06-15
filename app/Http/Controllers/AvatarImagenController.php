@@ -8,6 +8,9 @@ use App\Imagen;
 
 class AvatarImagenController extends Controller
 {
+    const ITEMS_PAGINA = 16;
+
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +19,7 @@ class AvatarImagenController extends Controller
     public function index(Request $request)
     {
     	if($request->user()->rol == 'alumno'){
-    		$imagenes_compradas = $request->user()->avatar->avatarImagenes()->paginate(12);
+    		$imagenes_compradas = $request->user()->avatar->avatarImagenes()->paginate(Self::ITEMS_PAGINA);
     		$imagenes_seleccionadas = array(
                 $request->user()->avatar->img_activo,
                 $request->user()->avatar->img_inactivo,

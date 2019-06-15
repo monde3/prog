@@ -38,7 +38,7 @@
       if (url_actual.search("mistareasfinalizadas") > 0){
           sideBarItem = $("#sidebar_item_mistareasfinalizadas");
       }
-      else if (url_actual.search("mistareas") > 0 || url_actual.search("tareaalumno") > 0){
+      else if (url_actual.search("mistareas") > 0 || url_actual.search("tareaalumno") > 0 || url_actual.search("completarTarea") > 0){
           sideBarItem = $("#sidebar_item_mistareas");
       }
       else if (url_actual.search("usuarios") > 0){
@@ -62,12 +62,12 @@
           if ( mostrarModal > 0){
               $("#modal_mensaje_titulo").text("{{trans('adminlte_lang::message.congrats')}}");
               $("#modal_mensaje_texto").text("{{trans('adminlte_lang::message.expfirstloginok')}}");
-              $("#modal_mensaje_pie").text("+5 EXP");
+              $("#modal_mensaje_pie").text("+5 {{trans('adminlte_lang::message.expupper')}}");
               $("#modal_mensaje").show();
           }else if ( mostrarModal < 0){
               $("#modal_mensaje_titulo").text("{{trans('adminlte_lang::message.vaya')}}");
               $("#modal_mensaje_texto").text("{{trans('adminlte_lang::message.expfirstloginfail')}}");
-              $("#modal_mensaje_pie").text("-2 EXP");
+              $("#modal_mensaje_pie").text("-5 {{trans('adminlte_lang::message.goldupper')}}");
               $("#modal_mensaje").show();
           }
       });

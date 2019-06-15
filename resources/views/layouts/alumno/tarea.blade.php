@@ -2,7 +2,7 @@
 
 	<div id="alumno_tarea_id" style="display:none;">{{ $tarea->id }}</div>
 	<div class="row">
-		<div class="col-md-4 col-md-offset-1">
+		<div class="col-md-4">
 			<div class="box box-solid box-primary">
 				<div class="box-header with-border">
 					
@@ -35,7 +35,7 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-10 col-md-offset-1">
+		<div class="col-md-12 ">
 			<div class="box box-solid box-primary">
 				<div class="box-header with-border">
 					<h3 class="box-title"><b>Características</b></h3>
@@ -162,10 +162,8 @@
 		</div>
 	</div>
 
-
-
 	<div class="row">
-		<div class="col-md-5 col-md-offset-1">
+		<div class="col-md-6">
 			<div class="box box-solid box-primary">
 				<div class="box-header with-border">
 					<h3 class="box-title"><b>Tiempo registrado</b></h3>
@@ -233,7 +231,7 @@
 			</div>
 		</div>
 
-		<div class="col-md-5">
+		<div class="col-md-6">
 			<div class="box box-solid box-primary">
 				<div class="box-header with-border">
 					<h3 class="box-title"><b>Gráfica</b></h3>
@@ -252,13 +250,13 @@
 	
 @else
 	<div class="row">
-		<div class="col-md-10 col-md-offset-1">
+		<div class="col-md-12">
 			<div class="box box-solid box-primary">
 				<div class="box-header with-border">
-					<h3 class="box-title"><b>Mi tarea</b></h3>					
+					<h3 class="box-title"><b>{{ trans('adminlte_lang::message.mitarea') }}</b></h3>					
 				</div>
 				<div class="box-body">
-				    No tiene acceso a la tarea
+				    {{ trans('adminlte_lang::message.tareanoacceso') }}
 				</div>				
 			</div>
 		</div>
@@ -270,23 +268,19 @@
 	@if(isset($exito))
 		<script>
 	    	$(document).ready(function() {
-					$("#modal_mensaje_titulo").text("¡Enhorabuena!");
-					$("#modal_mensaje_texto").text("Has completado la tarea "+"{{ $tarea->tarea->titulo }}");
-					$("#modal_mensaje_pie").text("+15 EXP  -  +50 ORO");
-					$("#modal_mensaje").show();
 	    		if ({{ $exito }} == 1) {
-					$("#modal_mensaje_titulo").text("¡Enhorabuena!");
-					$("#modal_mensaje_texto").text("Has completado la tarea "+"{{ $tarea->tarea->titulo }}");
-					$("#modal_mensaje_pie").text("+15 EXP  -  +50 ORO");
+					$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.congrats') }}");
+					$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.youcompletedtask') }} "+" {{ $tarea->tarea->titulo }}");
+					$("#modal_mensaje_pie").text("+15 EXP  +50 {{ trans('adminlte_lang::message.goldupper') }}");
 					$("#modal_mensaje").show();
-				}elseif ({{ $exito }} == 2) {
-					$("#modal_mensaje_titulo").text("¡Enhorabuena, sube de nivel!");
-					$("#modal_mensaje_texto").text("Has completado la tarea "+"{{ $tarea->tarea->titulo }}");
-					$("#modal_mensaje_pie").text("+15 EXP  -  +50 ORO - Level UP");
+				} else if ({{ $exito }} == 2) {
+					$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.congratslevelup') }}");
+					$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.youcompletedtask') }} {{ $tarea->tarea->titulo }}");
+					$("#modal_mensaje_pie").text("+15 EXP  +100 {{ trans('adminlte_lang::message.goldupper') }} - Level UP");
 					$("#modal_mensaje").show();
-				}else{
-					$("#modal_mensaje_titulo").text("¡Vaya!");
-					$("#modal_mensaje_texto").text("Por alguna razón no se ha podido marcar la tarea como completada");
+				} else {
+					$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.congrats') }}");
+					$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.youcompletedtask') }}");
 					$("#modal_mensaje_pie").text("-");
 					$("#modal_mensaje").show();
 				}
