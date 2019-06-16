@@ -11,15 +11,18 @@
 			@foreach($imagenes as $imagen)
 				<div class="gallery-column">
 					@if(!$imagenes_compradas->contains('imagen_id', $imagen->id))
-					<div class="gallery-img hovereffect">
-						<a href="{{ route('comprarImagen', ['imagen_id' => $imagen->id]) }}">
+					<div class="gallery-img">
+						<div class="hovereffect">
 					@else
 					<div class="gallery-img selectedimage">
 					@endif
-							<img class="img-responsive" src="{{ route('getImage', ['filename' => $imagen->filename]) }}">
-						@if(!$imagenes_compradas->contains('imagen_id', $imagen->id))
-						</a>
-						@endif
+						<img class="img-responsive" src="{{ route('getImage', ['filename' => $imagen->filename]) }}">
+					@if(!$imagenes_compradas->contains('imagen_id', $imagen->id))
+					        <div class="overlay">
+						    	<h2><b><a href="{{ route('comprarImagen', ['imagen_id' => $imagen->id]) }}">{{ trans('adminlte_lang::message.buy') }}</a></b></h2>
+					        </div>
+						</div>
+					@endif
 					</div>
 					<div class="gallery-text text-center">
 						<b>{{ trans('adminlte_lang::message.'.$imagen->parte) }}</b>
