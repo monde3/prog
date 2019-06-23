@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('htmlheader_title')
-	{{ trans('adminlte_lang::message.luchar') }}
+	{{ trans('adminlte_lang::message.fight') }}
 @endsection
 
 @section('contentheader_title')
@@ -13,7 +13,7 @@
 
 @section('contentheader_breadcrumb')
 	<li><a href="{{ url('avatar') }}"> {{ trans('adminlte_lang::message.avatar') }}</a></li>
-	<li class="active">{{ trans('adminlte_lang::message.luchar') }}</li>
+	<li class="active">{{ trans('adminlte_lang::message.fight') }}</li>
 @endsection
 
 @section('main-content')
@@ -59,7 +59,7 @@
 									<td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
 										<a class="btn btn-block btn-info"
 											onclick="luchar({{ $avatar->user_id }})">
-											{{ trans('adminlte_lang::message.luchar') }}
+											{{ trans('adminlte_lang::message.fight') }}
 										</a>
 									</td>
 							  	</tr>
@@ -72,6 +72,54 @@
 				</div>
 			</div>
 
+		</div>
+	</div>
+	<!--MODAL PARA LOS COMBATES-->
+	<!--Comentamos el fade para que vaya más rápido en la máquina virtual-->
+	<!--<div class="modal fade" tabindex="-1" role="dialog" id="modal_pomodoro">-->
+	<div class="modal" tabindex="-1" role="dialog" id="modal_lucha">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title text-center" id="modal_lucha_titulo"></h3>
+				</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="text-center">
+								<div class="col-md-1"></div>
+								<div class="col-md-4">
+									<h4 class="modal-content" id="modal_lucha_nombre_1"></h4>
+								</div>
+								<div class="col-md-2"></div>
+								<div class="col-md-4">
+									<h4 class="modal-content" id="modal_lucha_nombre_2"></h4>
+								</div>
+								<div class="col-md-1"></div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="text-center">
+								<div class="col-md-1"></div>
+								<div class="col-md-4">
+									<img id="modal_lucha_imagen_op_1" class="img-responsive img-rounded img-vs">
+									<img id="modal_lucha_imagen_cruz_1" class="img-responsive img-rounded img-tachado fade-in-delay" src="images/tachado.png" hidden>
+								</div>
+								<div class="col-md-2">
+									<img id="modal_lucha_imagen_vs" class="img-responsive img-rounded">
+								</div>
+								<div class="col-md-4">
+									<img id="modal_lucha_imagen_op_2" class="img-responsive img-rounded img-vs">
+									<img id="modal_lucha_imagen_cruz_2" class="img-responsive img-rounded img-tachado fade-in-delay" src="images/tachado.png" hidden>
+								</div>
+								<div class="col-md-1"></div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<div id="modal_lucha_pie" class='text-center fade-in-delay'></div>
+						<input id="btn_cerrar_modal_lucha" type="button" class="btn btn-primary" data-dismiss="modal" onclick="modalLuchaToggle()" value="Cerrar">
+					</div>
+				</div>
 		</div>
 	</div>
 @endsection
@@ -92,7 +140,31 @@
 					$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.helpfighttext') }}");
 					$("#modal_mensaje").show();
 	    			return false; } );
+
+			    // Modal de combate externo
+				@if( isset($oponente) )
+					var resultado = "{{ $resultado }}".split("%");
+					if(resultado[0] == "OK"){
+						$("#modal_lucha_imagen_cruz_2").hide();
+						$("#modal_lucha_imagen_cruz_2").removeClass("img-tachado fade-in-delay");
+					}else{
+						$("#modal_lucha_imagen_cruz_1").removeClass("img-tachado fade-in-delay");
+						$("#modal_lucha_imagen_cruz_1").hide();
+					}
+      				$("#modal_lucha_imagen_op_1").attr("src", "{{ route('imagenAvatar', ['user_id' => $oponente->user_id, 'parte' => 'avatar']) }}" );
+      				$("#modal_lucha_imagen_op_2").attr("src", "{{ route('imagenAvatar', ['user_id' => Auth::user()->id, 'parte' => 'avatar']) }}" );
+      				$("#modal_lucha_imagen_vs").attr("src","images/versus.png");
+					$("#modal_lucha_titulo").text("{{trans('adminlte_lang::message.fightexternaltitle')}}");
+					$("#modal_lucha_nombre_1").text(resultado[3]);
+					$("#modal_lucha_nombre_2").text(resultado[2]);
+					$("#modal_lucha_pie").text(resultado[1]);
+					$("#modal_lucha").show();
+			    @endif
     		});
+
+			function modalLuchaToggle(){
+				$("#modal_lucha").modal('toggle');
+			};
 
     		function luchar(oponente_id){
                 var url_tarea = "{{ url ('lucharContra') }}"
@@ -103,28 +175,27 @@
 				}).done(function t(response) {
 					var resp = response.split("\\");
 
-					alert(response);
-
 					if(resp[0]=="err"){
 						$("#modal_mensaje_titulo").text("ERROR");
 						$("#modal_mensaje_texto").text(resp[1]);
 						$("#modal_mensaje").show();
 					}else{
+						$("#modal_lucha_titulo").text("{{ trans('adminlte_lang::message.fightexclam') }}");
+						$("#modal_lucha_nombre_1").text(resp[4]);
+						$("#modal_lucha_nombre_2").text(resp[5]);
+	      				$("#modal_lucha_imagen_vs").attr("src","images/versus.png");
+	      				$("#modal_lucha_imagen_op_1").attr("src", "{{ route('imagenAvatar', ['user_id' => Auth::user()->id, 'parte' => 'avatar']) }}" );
+	      				$("#modal_lucha_imagen_op_2").attr("src", "http://progresa.com.devel/imagenAvatar/"+oponente_id+"/avatar");
+
 						if(resp[0]=="vic"){
-              				$("#modal_mensaje_imagen").show();
-              				$("#modal_mensaje_imagen").attr("src","images/congrats.gif");
-							$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.congrats') }}");
-							$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.youwin') }}");
-              				$("#modal_mensaje_pie").text("+{{ \App\Avatar::ORO_VICTORIA }} {{ trans('adminlte_lang::message.gold') }}".concat(" -").concat(resp[3]).concat(" {{ trans('adminlte_lang::message.life') }}"));
-							$("#modal_mensaje").show();
+							$("#modal_lucha_imagen_cruz_1").hide();
+              				$("#modal_lucha_pie").text("+{{ \App\Avatar::ORO_VICTORIA }} {{ trans('adminlte_lang::message.gold') }}".concat(" -").concat(resp[3]).concat(" {{ trans('adminlte_lang::message.life') }}"));
 						}else if(resp[0]=="der"){
-              				$("#modal_mensaje_imagen").show();
-              				$("#modal_mensaje_imagen").attr("src","images/try_again.gif");
-							$("#modal_mensaje_titulo").text("{{ trans('adminlte_lang::message.pity') }}");
-							$("#modal_mensaje_texto").text("{{ trans('adminlte_lang::message.youlose') }}");
-              				$("#modal_mensaje_pie").text("-".concat(resp[3]).concat(" {{ trans('adminlte_lang::message.life') }}"));
-							$("#modal_mensaje").show();
+							$("#modal_lucha_imagen_cruz_2").hide();
+              				$("#modal_lucha_pie").text("-".concat(resp[3]).concat(" {{ trans('adminlte_lang::message.life') }}"));
 						}
+						$("#modal_lucha").show();
+
 						$("#header-oro").text(resp[1]);
 						$("#header-vida").text(resp[2]);
 					}

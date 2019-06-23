@@ -5,7 +5,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">{{ trans('adminlte_lang::message.timemanaging') }}</h3>
+        <h3 class="modal-title text-center">{{ trans('adminlte_lang::message.timemanaging') }}</h3>
       </div>
       <div class="modal-body">
         <h3 id="h1-fase" align="center">{{ trans('adminlte_lang::message.timer')}}</h3>

@@ -5,7 +5,7 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-						<h3 class="modal-title" id="modal_mensaje_titulo"></h3>
+				<h3 class="modal-title text-center" id="modal_mensaje_titulo"></h3>
 			</div>
 				<div class="modal-body">
 					<h4 class="modal-content" id="modal_mensaje_texto"></h4>

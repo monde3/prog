@@ -32,15 +32,18 @@ class AddImgToAvatarTable extends Migration
      */
     public function down()
     {
-        Schema::table('avatar', function (Blueprint $table) {
-            $table->dropColumn('img_activo');
-            $table->dropColumn('img_inactivo');
-            $table->dropColumn('img_herido');
-            $table->dropColumn('img_head');
-            $table->dropColumn('img_body');
-            $table->dropColumn('img_hands');
-            $table->dropColumn('img_feet');
-            $table->dropColumn('img_weapon');
-        });
+        if (Schema::hasTable('avatar'))
+        {
+            Schema::table('avatar', function (Blueprint $table) {
+                $table->dropColumn('img_activo');
+                $table->dropColumn('img_inactivo');
+                $table->dropColumn('img_herido');
+                $table->dropColumn('img_head');
+                $table->dropColumn('img_body');
+                $table->dropColumn('img_hands');
+                $table->dropColumn('img_feet');
+                $table->dropColumn('img_weapon');
+            });
+        }
     }
 }

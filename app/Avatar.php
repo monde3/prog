@@ -256,18 +256,25 @@ class Avatar extends Model
 
             $armadura_usuario = ($this->head + $this->body + $this->hands + $this->feet)
                                     / Self::NUMERO_PARTES_ARMADURA;
+            $armadura_oponente = ($oponente->head + $oponente->body + $oponente->hands + $oponente->feet)
+                                    / Self::NUMERO_PARTES_ARMADURA;
 
             // Comparamos la media de los puntos de armadura del usuario
             // con los puntos del arma del oponente
             if($victoria){
                 $vida_restar = (abs($armadura_usuario-$oponente->weapon) > 10 ? 0
                                  : ($armadura_usuario>$oponente->weapon ? 1 : 2));
+                $vida_restar_oponente = (abs($armadura_oponente-$this->weapon) > 10 ? 3
+                                        : ($armadura_oponente>$this->weapon ? 4 : 5));
                 $this->sumarOro(Self::ORO_VICTORIA);
             }else{
                 $vida_restar = (abs($armadura_usuario-$oponente->weapon) > 10 ? 3
                                  : ($armadura_usuario>$oponente->weapon ? 4 : 5));
+                $vida_restar_oponente = (abs($armadura_oponente-$this->weapon) > 10 ? 0
+                                        : ($armadura_oponente>$this->weapon ? 1 : 2));
             }
             $this->restarVida($vida_restar * 2);
+            $oponente->restarVida($vida_restar_oponente * 2);
         }
         else{
             $victoria = false;

@@ -9,6 +9,7 @@ use Symphony\Component\HttpFoundation\Response;
 
 use App\Avatar;
 use App\User;
+use App\Notificacion;
 
 class AvatarController extends Controller
 {
@@ -84,13 +85,26 @@ class AvatarController extends Controller
     public function luchar(request $request) {
         $avatar_usuario = Avatar::where('user_id', '=', $request->user()->id)->firstOrFail();
 
+        // Recuperamos la variable de sesión flash
+        $oponente_id = $request->session()->pull('combateOponente');
+        // Nos aseguramos de que la variable se ha eliminado
+        $request->session()->forget('combateOponente');
+        $request->session()->save();
+
         $avatares = Avatar::where('estado', '=', 'activo')
                     ->where('user_id', '!=', $request->user()->id)
                     ->where(DB::raw('FLOOR(SQRT(exp DIV '.Avatar::FACTOR_SUBIDA_NIVEL.'))'),
                             '=', $avatar_usuario->nivelAvatar())
                     ->get();
 
-        return view('luchar', compact('avatares'));
+        if (isset($oponente_id) && ($oponente_id > 0)){
+            $resultado = $request->session()->pull('combateResultado');
+            $request->session()->forget('combateResultado');
+            $request->session()->save();
+            $oponente = Avatar::where('user_id', '=', $oponente_id)->firstOrFail();
+            return view('luchar', compact('avatares', 'oponente', 'resultado'));
+        } else
+            return view('luchar', compact('avatares'));
     }
 
     /**
@@ -110,18 +124,40 @@ class AvatarController extends Controller
      *            vida perdida
      */
     public function lucharContra(request $request, $opponent_id) {
-        $avatar = Avatar::where('user_id', '=', $request->user()->id)->firstOrFail();
-        $oponente = Avatar::where('user_id', '=', $opponent_id)->firstOrFail();
+        try {
+            $avatar = Avatar::where('user_id', '=', $request->user()->id)->firstOrFail();
+            $oponente = Avatar::where('user_id', '=', $opponent_id)->firstOrFail();
 
-        if ($avatar->vida >= 20 and $avatar->estado = 'activo'){
-            $vida_antes = $avatar->vida;
-            $victoria = $avatar->lucha($oponente);
-            $value = ($victoria ? "vic\\" : "der\\").$avatar->oro."\\".$avatar->vida."\\".($vida_antes-$avatar->vida);
-        } else  {
-            $value = "err\\".trans('adminlte_lang::message.fighterror');
+            if ($avatar->vida >= 20 and $avatar->estado = 'activo' and
+                    $oponente->vida >= 20 and $oponente->estado = 'activo'){
+                $vida_antes = $avatar->vida;
+                $vida_antes_oponente = $oponente->vida;
+                $victoria = $avatar->lucha($oponente);
+
+                $value = ($victoria ? "vic" : "der")."\\".$avatar->oro."\\".$avatar->vida."\\".($vida_antes-$avatar->vida)."\\".($avatar->alumno->nombre)."\\".($oponente->alumno->nombre);
+
+                // Creamos la notificación para el oponente
+                $notificacion = new Notificacion;
+                $notificacion->user_id = $oponente->alumno->id;
+                $notificacion->oponente_id = $avatar->alumno->id;
+                $notificacion->texto = $avatar->alumno->nombre." ".trans('adminlte_lang::message.foughtwithyou');
+                $notificacion->resultado = ($victoria 
+                    ? "KO"."%".trans('adminlte_lang::message.youlost')." "
+                    : "OK"."%".trans('adminlte_lang::message.youwon')." ".Avatar::ORO_VICTORIA." puntos de ".trans('adminlte_lang::message.gold')." y perdido ")
+                    .($vida_antes_oponente-$oponente->vida)." puntos de ".trans('adminlte_lang::message.life')
+                    ."%".($oponente->alumno->nombre)."%".($avatar->alumno->nombre);
+                $notificacion->save();
+            } else {
+                if($avatar->vida < 20 or $avatar->estado != 'activo')
+                    $value = "err\\".trans('adminlte_lang::message.fighterror');
+                else
+                    $value = "err\\".trans('adminlte_lang::message.fightinactiveoponent');
+            }
+            return $value;
+        } catch (Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            return var_dump($e);
         }
-        
-        return $value;
     }
 
     /**

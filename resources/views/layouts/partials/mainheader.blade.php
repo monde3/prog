@@ -75,6 +75,22 @@
                             <li>
                                 <!-- Inner Menu: contains the notifications -->
                                 <ul class="menu">
+                                    @if (Auth::user()->notificaciones->count() > 0)
+                                        @foreach (Auth::user()->notificacionesActivas() as $not)
+                                        <li>
+                                            <a href="{{ route('tratarNotificacion',
+                                                    ['notificacion_id' => 
+                                                        $not->id]) }}">
+                                                @if(!is_null($not->alumno_tarea_id))
+                                                <i class="glyphicon glyphicon-tasks text-blue"></i>
+                                                @elseif(!is_null($not->oponente_id))
+                                                <i class="glyphicon glyphicon-screenshot text-black"></i>
+                                                @endif
+                                                {{ $not->texto }}
+                                            </a>
+                                        </li>
+                                        @endforeach
+                                    @endif
                                     @if (Auth::user()->numNotificacionesAlertaRoja() > 0)
                                         <li><!-- start notification -->
                                             <a href="{{ url('mistareas') }}">

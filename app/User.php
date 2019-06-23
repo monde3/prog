@@ -64,6 +64,26 @@ class User extends Authenticatable
         return $this->hasOne('App\Avatar', 'user_id', 'id');
     }
 
+    /**
+     * Obtiene las notificaciones del usuario
+     */
+    public function notificaciones()
+    {
+        return $this->hasMany('App\Notificacion');
+    }
+
+    /**
+     * Obtiene las notificaciones activas del usuario
+     */
+    public function notificacionesActivas()
+    {
+        $notificaciones = collect($this->notificaciones);
+        $notificaciones = $notificaciones->reject(function ($notificacion) {
+                return  !$notificacion->activa;
+            });
+        return $notificaciones;
+    }
+
 
     public function numNotificaciones(){
 
@@ -93,9 +113,9 @@ class User extends Authenticatable
             $numNotificaciones = $tareasProfesor->count();
         }
         
-            
+        $notificacionesActivas = $this->notificacionesActivas();
 
-        return $numNotificaciones;
+        return $numNotificaciones + $notificacionesActivas->count();
     }
 
     public function numNotificacionesAlertaRoja(){
@@ -196,6 +216,7 @@ class User extends Authenticatable
         $mostrarModal = $request->session()->pull('mostrarModalFirstLogin');
         // Nos aseguramos de que la variable se ha eliminado
         $request->session()->forget('mostrarModalFirstLogin');
+        $request->session()->save();
 
         if (($this->rol == 'alumno') && isset($mostrarModal) && ($mostrarModal > 0))
         {

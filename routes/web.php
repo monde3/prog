@@ -218,8 +218,13 @@ Route::get('cambiarImagenAvatar/{imagen_id}/{estado}', [
     'middleware' => 'auth',
     'uses' => 'AvatarImagenController@cambiarImagenAvatar'
 ]);
-//[amondejar]
 
+Route::get('tratarNotificacion/{notificacion_id}', [
+    'as' => 'tratarNotificacion',
+    'middleware' => 'auth',
+    'uses' => 'NotificacionController@tratarNotificacion'
+]);
+//[amondejar]
 
 
 Route::post('crearTarea', 'ServiciosController@crearTarea');

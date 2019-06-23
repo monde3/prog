@@ -21,7 +21,7 @@ class AvatarImagen extends Model
     public $timestamps = false;
 
     /**
-     * Obtiene la tarea que se ha asignado al alumno.
+     * Obtiene la imagen que se ha asignado al avatar.
      */
     public function imagen()
     {
